@@ -18,14 +18,14 @@
             <Blend />
          </effect>
       </Label>
-      <TextField layoutX="114.0" layoutY="123.0" prefHeight="32.0" prefWidth="177.0" promptText="Email" />
-      <TextField layoutX="114.0" layoutY="168.0" prefHeight="32.0" prefWidth="177.0" promptText="Password" />
+      <TextField fx:id="txt_email" layoutX="114.0" layoutY="123.0" prefHeight="32.0" prefWidth="177.0" promptText="Email" />
+      <TextField fx:id="txt_password" layoutX="114.0" layoutY="168.0" prefHeight="32.0" prefWidth="177.0" promptText="Password" />
       <Button fx:id="btn_play" layoutX="114.0" layoutY="219.0" mnemonicParsing="false" onAction="#login" prefHeight="39.0" prefWidth="177.0" text="Play">
          <font>
             <Font size="15.0" />
          </font>
       </Button>
-      <Button fx:id="btn_singin" layoutX="114.0" layoutY="267.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="177.0" text="sing in">
+      <Button fx:id="btn_singin" layoutX="114.0" layoutY="267.0" mnemonicParsing="false" onAction="#sign_In" prefHeight="39.0" prefWidth="177.0" text="sign in">
          <font>
             <Font size="15.0" />
          </font>
