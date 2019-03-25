@@ -1,33 +1,27 @@
 package gui.controller;
 
-
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 
-public class LoginController {
-	
+public class SignInController {
+
     @FXML
     private TextField txt_email;
 
     @FXML
-    private TextField txt_password;
-    
-    @FXML
-    private Button btn_play;
+    private TextField txt_paasword;
 
     @FXML
     private Button btn_singin;
-    
-    @FXML
-    void login(ActionEvent event) {
-    	System.out.println("clicked play");
 
-    }
-    
+    @FXML
+    private TextField txt_nickname;
+
     @FXML
     void sign_In(ActionEvent event) {
+    	System.out.println("clicked sign In");
 
     }
 
