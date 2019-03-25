@@ -7,8 +7,8 @@ public class Sprite {
 	
 	private double positionX;
     private double positionY;    
-    private double velocityX;
-    private double velocityY;
+    public double velocityX;
+    public double velocityY;
     private double width;
     private double height;
 
@@ -16,8 +16,8 @@ public class Sprite {
     {
         positionX = 0;
         positionY = 0;    
-        velocityX = 0;
-        velocityY = 0;
+        velocityX = 5;
+        velocityY = 5;
     }
 
     public void setMass(int width, int height)
@@ -50,6 +50,11 @@ public class Sprite {
     {
         velocityX += x;
         velocityY += y;
+    }
+    
+    public void changePosition(int x, int y) {
+    	positionX+=x;
+    	positionY+=y;
     }
 
     public void update(double time)

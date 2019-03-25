@@ -25,37 +25,38 @@ public class UserCanvas extends Application{
         primaryStage.setTitle("Agar.io");
         Group root = new Group();
         Canvas canvas = new Canvas(1024,680);
-        GraphicsContext gc = canvas.getGraphicsContext2D();
-        drawShapes(gc);
+        final GraphicsContext gc = canvas.getGraphicsContext2D();
+        
+        final Sprite player = new Sprite();
+        player.setPosition(232, 128);
+    	player.setMass(35,35);
+    	player.render(gc);
+    	
+        drawShapes(gc, player);
+        
         root.getChildren().add(canvas);
-        primaryStage.setScene(new Scene(root));
+        Scene scene = new Scene(root);
+        primaryStage.setFullScreenExitHint("Juego Iniciado");
+        primaryStage.setScene(scene);
+        primaryStage.setFullScreen(true);
         primaryStage.show();
         // Clear away portions as the user drags the mouse
         canvas.setOnMouseMoved( 
         new EventHandler<MouseEvent>() {
             public void handle(MouseEvent e) {
-                //gc.clearRect(e.getX() - 2, e.getY() - 2, 5, 5);
+                
+                
+                
             }
         });
-  
-     // Fill the Canvas with a Blue rectnagle when the user double-clicks
-        canvas.addEventHandler(MouseEvent.MOUSE_CLICKED, 
-         new EventHandler<MouseEvent>() {
-             public void handle(MouseEvent t) {            
-                  
-             }
-         });
-        
-        
+
     }
     
     
 
-    private void drawShapes(final GraphicsContext gc) {
-    	final Sprite player = new Sprite();
-    	player.setPosition(232, 128);
-    	player.setMass(35,35);
-    	player.render(gc);
+    private void drawShapes(final GraphicsContext gc, final Sprite player) {
+    	
+    	
     	
     	final LongValue lastNanoTime = new LongValue( System.nanoTime() );
 
@@ -68,27 +69,17 @@ public class UserCanvas extends Application{
                 lastNanoTime.value = currentNanoTime;
                 
                 // game logic
-                Point mousePosition = MouseInfo.getPointerInfo().getLocation();
+                Point xy = MouseInfo.getPointerInfo().getLocation();
+                double dx = xy.getX() - player.x();
+                double dy = xy.getY() - player.y();
                 
-                int distanceSpriteMouseX = mousePosition.x - (int)player.x();
-                int distanceSpriteMouseY = mousePosition.y - (int)player.y();
+                double theta = Math.atan2(dy, dx);
                 
-                if(distanceSpriteMouseY<0) {
-                	player.addVelocity(0, -5);
-                }
-                if(distanceSpriteMouseY>0) {
-                	player.addVelocity(0, 5);
-                }
-                if(distanceSpriteMouseX<0) {
-                	player.addVelocity(-5, 0);
-                }
-                if(distanceSpriteMouseX>0) {
-                	player.addVelocity(5, 0);
-                }
-                player.update(elapsedTime);
+                int nx = (int)(player.velocityX * Math.cos(theta));
+                int ny = (int)(player.velocityY * Math.sin(theta));
+                player.changePosition(nx, ny);
                 
-                //Render 
-                gc.clearRect(0, 0, 400, 350);
+                gc.clearRect(0, 0, 1024, 680);
                 player.render(gc);
             }
         }.start();
