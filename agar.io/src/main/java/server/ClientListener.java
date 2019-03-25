@@ -9,13 +9,13 @@ import java.net.SocketException;
 
 import javax.net.ssl.SSLSocket;
 
-public class ServerThread extends Thread {
+public class ClientListener extends Thread {
 
 	SSLSocket client;
 	BufferedReader readerHS;
 	PrintWriter writerHS;
 
-	public ServerThread(SSLSocket request) {
+	public ClientListener(SSLSocket request) {
 		super();
 
 		client = request;
@@ -35,20 +35,20 @@ public class ServerThread extends Thread {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		// while (!client.isClosed()) {
-		String line = "";
-		try {
-			String[] supported = client.getSupportedCipherSuites();
-			client.setEnabledCipherSuites(supported);
-			line = readerHS.readLine();
-			System.out.println(line);
-			onInputLine(line);
-		} catch (SocketException e1) {
-			System.out.println("One user has left before to register");
-		}catch (IOException e) {
-			e.printStackTrace();
+		while (!client.isClosed()) {
+			String line = "";
+			try {
+				String[] supported = client.getSupportedCipherSuites();
+				client.setEnabledCipherSuites(supported);
+				line = readerHS.readLine();
+				System.out.println(line);
+				onInputLine(line);
+			} catch (SocketException e1) {
+				System.out.println("One user has left before to register");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
-		// }
 		try {
 			readerHS.close();
 		} catch (IOException e) {
@@ -56,15 +56,21 @@ public class ServerThread extends Thread {
 			e.printStackTrace();
 		}
 
-		// The next code lines are going to get the name and host from the user
-
 	}
 
 	public void onInputLine(String line) {
-		Server.registerNewUser(client.hashCode(), line);
+		String[] arregloS = line.split(" ");
+		int hash = client.hashCode();
+		if (arregloS.length == 3)
+			Server.registerNewUser(hash, arregloS);
+		else if (arregloS.length == 2)
+			Server.playGameOf(hash, arregloS);
+		else {
+			Server.returnStateFromGame(hash, arregloS);
+		}
 	}
 
-	public void writeClientSuccessSignIn(String line) {
+	public void writeSessionStatus(String line) {
 		writerHS.println(line);
 	}
 

@@ -9,7 +9,7 @@
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 
-<VBox prefHeight="400.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<VBox prefHeight="400.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.controller.serverStController">
   <children>
     <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="300.0" prefWidth="600.0" VBox.vgrow="ALWAYS">
       <children>
@@ -18,12 +18,12 @@
             <Font size="26.0" />
           </font>
         </Label>
-            <Button fx:id="butStart" layoutX="253.0" layoutY="87.0" mnemonicParsing="false" onAction="#startServer" text="Start Server" />
+            <Button fx:id="butStart" layoutX="281.0" layoutY="87.0" mnemonicParsing="false" onAction="#startServer" text="Start Server" />
             <TitledPane fx:id="usersTitledPane" animated="false" layoutX="14.0" layoutY="154.0" prefHeight="232.0" prefWidth="275.0" text="Users Connected">
                <content>
-                  <TableView prefHeight="200.0" prefWidth="200.0">
+                  <TableView fx:id="usersTable" prefHeight="200.0" prefWidth="200.0">
                     <columns>
-                      <TableColumn fx:id="usersTable" prefWidth="189.0" text="Nickname" />
+                      <TableColumn prefWidth="189.0" text="Nickname" />
                       <TableColumn prefWidth="84.0" text="Score" />
                     </columns>
                   </TableView>
@@ -31,7 +31,7 @@
             </TitledPane>
             <TitledPane fx:id="matchTitledPane" animated="false" layoutX="351.0" layoutY="154.0" prefHeight="232.0" prefWidth="275.0" text="Match Stats">
                <content>
-                  <TableView prefHeight="200.0" prefWidth="200.0">
+                  <TableView fx:id="matchTable" prefHeight="200.0" prefWidth="200.0">
                      <columns>
                         <TableColumn prefWidth="182.0" text="Item" />
                         <TableColumn prefWidth="91.0" text="Value" />

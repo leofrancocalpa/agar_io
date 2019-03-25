@@ -27,10 +27,10 @@ public class Client {
 		Thread tScanner = new Thread(new Runnable() {
 //			lee las entradas del cliente: usuario y contraseña
 			public void run() {
-//				while(true) {
+				while(true) {
 					String line = scanner.nextLine();
 					writerC.println(line);
-//				}
+				}
 			}
 		});
 		
