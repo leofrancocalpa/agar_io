@@ -4,7 +4,10 @@ import java.awt.MouseInfo;
 import java.awt.Point;
 
 import javafx.animation.AnimationTimer;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Application;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -15,6 +18,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 public class UserCanvas extends Application{
 
@@ -55,34 +59,31 @@ public class UserCanvas extends Application{
     
 
     private void drawShapes(final GraphicsContext gc, final Sprite player) {
-    	
-    	
-    	
-    	final LongValue lastNanoTime = new LongValue( System.nanoTime() );
-
-        new AnimationTimer()
-        {
-            public void handle(long currentNanoTime)
-            {
-                // calculate time since last update.
-                double elapsedTime = (currentNanoTime - lastNanoTime.value) / 100000000000.0;
-                lastNanoTime.value = currentNanoTime;
-                
-                // game logic
-                Point xy = MouseInfo.getPointerInfo().getLocation();
-                double dx = xy.getX() - player.x();
-                double dy = xy.getY() - player.y();
-                
-                double theta = Math.atan2(dy, dx);
-                
-                int nx = (int)(player.velocityX * Math.cos(theta));
-                int ny = (int)(player.velocityY * Math.sin(theta));
-                player.changePosition(nx, ny);
-                
-                gc.clearRect(0, 0, 1024, 680);
-                player.render(gc);
-            }
-        }.start();
+    	        
+        Timeline gameLoop = new Timeline();
+        gameLoop.setCycleCount( Timeline.INDEFINITE );
+        KeyFrame kf = new KeyFrame(
+                Duration.seconds(0.04),                // 0.017 -> 60 FPS
+                new EventHandler<ActionEvent>()
+                {
+                    public void handle(ActionEvent ae)
+                    {
+                    	 Point xy = MouseInfo.getPointerInfo().getLocation();
+                         double dx = xy.getX() - player.x();
+                         double dy = xy.getY() - player.y();
+                         
+                         double theta = Math.atan2(dy, dx);
+                         
+                         int nx = (int)(player.velocityX * Math.cos(theta));
+                         int ny = (int)(player.velocityY * Math.sin(theta));
+                         player.changePosition(nx, ny);
+                         
+                         gc.clearRect(0, 0, 1024, 680);
+                         player.render(gc);
+                    }
+                });
+        gameLoop.getKeyFrames().add( kf );
+        gameLoop.play();
        
     }
 
