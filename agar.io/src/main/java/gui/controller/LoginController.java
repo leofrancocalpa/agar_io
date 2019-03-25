@@ -1,6 +1,6 @@
 package gui.controller;
 
-import java.util.ResourceBundle;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -23,6 +23,11 @@ public class LoginController {
     @FXML
     void login(ActionEvent event) {
     	System.out.println("clicked play");
+
+    }
+    
+    @FXML
+    void sign_In(ActionEvent event) {
 
     }
 
