@@ -67,4 +67,33 @@ public class Client extends Thread {
 	public void sendServer(String parameter) {
 					writerC.println(parameter);
 	}
+	/**
+	 * 
+	 * @return  Array of strings that represent the position x,y and mass of every food in the game
+	 */
+	public String[] getFoodFromGame() {
+		return null;
+	}
+	/**
+	 * 
+	 * @return Array of strings that represent the position x,y and mass of every player in the game
+	 */
+	public String[] getPlayerFromGame() {
+		return null;
+	}
+	/**
+	 * 
+	 * @return Array of strings that represent the initial info of the user. Initial position, initial mass
+	 * (width and height) and id
+	 */
+	public String[] getInfoPlayer() {
+		return null;
+	}
+	/**
+	 * 
+	 * @param state position x,y and mass that is represented by a ball
+	 */
+	public void updatePlayer(String[] state) {
+		
+	}
 }
