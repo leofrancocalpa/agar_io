@@ -3,6 +3,7 @@ package gui;
 import java.awt.MouseInfo;
 import java.awt.Point;
 
+import client.Client;
 import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -23,10 +24,12 @@ import javafx.util.Duration;
 public class UserCanvas extends Application{
 
 	private Stage primaryStage;
+	private Client user;
  
     @Override
     public void start(Stage PprimaryStage) {
     	primaryStage = PprimaryStage;
+    	user= new Client();
         primaryStage.setTitle("Agar.io");
         Group root = new Group();
         Canvas canvas = new Canvas(1024,680);
