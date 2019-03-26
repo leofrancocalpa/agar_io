@@ -1,4 +1,4 @@
-package gui.controller;
+package server;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -30,8 +30,11 @@ public class serverStController {
 	@FXML
 	private TableView matchTable;
 
+	private Server server;
+
 	@FXML
 	void startServer (ActionEvent event) {
-		System.out.println("inicia Server alv");
+		server = new Server();
+		server.start();
 	}
 }
