@@ -22,10 +22,11 @@ import javafx.util.Duration;
 
 public class UserCanvas extends Application{
 
-
+	private Stage primaryStage;
  
     @Override
-    public void start(Stage primaryStage) {
+    public void start(Stage PprimaryStage) {
+    	primaryStage = PprimaryStage;
         primaryStage.setTitle("Agar.io");
         Group root = new Group();
         Canvas canvas = new Canvas(1024,680);
