@@ -13,11 +13,12 @@ import server.ClientListener;
 		@Override
 		public void start(Stage primaryStage) {
 			try {
-				Parent root = FXMLLoader.load(getClass().getResource("controller/login.fxml"));
+				Parent root = FXMLLoader.load(getClass().getResource("../client/login.fxml"));
 				Scene scene = new Scene(root);
 				primaryStage.setScene(scene);
 				primaryStage.show();
 			} catch(Exception e) {
+				System.out.println(e.getMessage());
 				e.printStackTrace();
 			}
 		}
