@@ -11,6 +11,9 @@ import javax.net.ssl.SSLSocket;
 
 public class ClientListener extends Thread {
 
+	public static final String SESSION_FAILED = "Password or email wrong";
+	public static final String REGISTER_SUCCESS = "User created successfully";
+
 	SSLSocket client;
 	BufferedReader readerHS;
 	PrintWriter writerHS;
@@ -66,7 +69,7 @@ public class ClientListener extends Thread {
 		else if (arregloS.length == 2)
 			Server.playGameOf(hash, arregloS);
 		else {
-			Server.returnStateFromGame(hash, arregloS);
+			Server.sendStateFromGame(hash, arregloS);
 		}
 	}
 

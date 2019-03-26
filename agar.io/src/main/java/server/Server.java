@@ -1,24 +1,24 @@
 package server;
 
 import java.io.IOException;
-import java.net.ServerSocket;
 import java.util.HashMap;
-import client.User;
 
 import javax.net.ssl.SSLServerSocket;
 import javax.net.ssl.SSLServerSocketFactory;
 import javax.net.ssl.SSLSocket;
 
-public class Server {
+public class Server extends Thread{
 
 	public static final String KEYSTORE_LOCATION = "C:/Users/99031510240/alv";
 	public static final String KEYSTORE_PASSWORD = "123456";
+
 
 	private static HashMap<Integer, ClientListener> threads = new HashMap<Integer, ClientListener>();
 	private static ThreadGroup threadsGroup = new ThreadGroup("threadsGroup");
 	private static HashMap<String, User> users = new HashMap<String, User>();
 
-	public static void main(String[] args) {
+	@Override
+	public void run() {
 		SSLServerSocketFactory ssf = (SSLServerSocketFactory) SSLServerSocketFactory.getDefault();
 		System.setProperty("javax.net.ssl.keyStore", KEYSTORE_LOCATION);
 		System.setProperty("javax.net.ssl.keyStorePassword", KEYSTORE_PASSWORD);
@@ -47,7 +47,7 @@ public class Server {
 	private static String signIn(String email, String nickname, String password) {
 		User user = new User(email, nickname, password);
 		users.put(email, user);
-		return "User created successfully";
+		return ClientListener.REGISTER_SUCCESS;
 	}
 
 	public static void playGameOf(int hashC, String[] userAndPass) {
@@ -57,11 +57,11 @@ public class Server {
 				toPlay.setInGame(true);
 		}
 		if (toPlay == null || !toPlay.isInGame())
-			threads.get(hashC).writeSessionStatus("Password or email wrong, try again");
+			threads.get(hashC).writeSessionStatus(ClientListener.SESSION_FAILED);
 	}
 
-	public static void returnStateFromGame(int hash, String[] arregloS) {
+	public static void sendStateFromGame(int hash, String[] arregloS) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }
