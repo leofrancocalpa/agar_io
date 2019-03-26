@@ -24,22 +24,13 @@ public class SignInController {
 
     private Client client;
 
-    private LoginController logInC;
     public void putClient(Client pClient) {
     	client = pClient;
 	}
 
-    public void putLoginController(LoginController pLoginC){
-    	logInC = pLoginC;
-    }
     @FXML
     void sign_In(ActionEvent event) {
     	client.sendServer(txt_email.getText() + " " + txt_nickname.getText() + " " + txt_paasword.getText());
-    	Alert dialog;
-		dialog = new Alert(AlertType.INFORMATION);
-		dialog.setTitle("Register complete");
-		dialog.setContentText(ClientListener.REGISTER_SUCCESS);
-		dialog.show();
     }
 
 }

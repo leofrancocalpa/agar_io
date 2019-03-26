@@ -58,6 +58,8 @@ public class Server extends Thread{
 		}
 		if (toPlay == null || !toPlay.isInGame())
 			threads.get(hashC).writeSessionStatus(ClientListener.SESSION_FAILED);
+		else
+			threads.get(hashC).writeSessionStatus(ClientListener.STARTING_MATCH);
 	}
 
 	public static void sendStateFromGame(int hash, String[] arregloS) {

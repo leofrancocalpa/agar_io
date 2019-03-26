@@ -10,7 +10,7 @@ public class Match
 	public Match(int xMax, int yMax) {
 		Ball ball = new Ball(xMax, yMax);
         ball.setPrincipal(true);
-        this.balls = new ArrayList<>();
+        this.balls = new ArrayList<Ball>();
         this.balls.add(ball);
 	}
 	

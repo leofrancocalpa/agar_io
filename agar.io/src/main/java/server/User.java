@@ -11,7 +11,7 @@ public class User {
 		email = pEmail;
 		nickname = pNickname;
 		password = pPassword;
-		setInGame(false);
+		inGame = false;
 	}
 	
 	public String getEmail() {

@@ -13,6 +13,7 @@ public class ClientListener extends Thread {
 
 	public static final String SESSION_FAILED = "Password or email wrong";
 	public static final String REGISTER_SUCCESS = "User created successfully";
+	public static final String STARTING_MATCH = "Starting match";
 
 	SSLSocket client;
 	BufferedReader readerHS;
@@ -49,6 +50,12 @@ public class ClientListener extends Thread {
 			} catch (SocketException e1) {
 				System.out.println("One user has left before to register");
 			} catch (IOException e) {
+				try {
+					client.close();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 				e.printStackTrace();
 			}
 		}

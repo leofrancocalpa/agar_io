@@ -1,4 +1,4 @@
-package launcher;
+package server;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -12,7 +12,7 @@ public class MainServer extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		try {
-			Parent root = FXMLLoader.load(getClass().getResource("controller/serverSt.fxml"));
+			Parent root = FXMLLoader.load(getClass().getResource("serverSt.fxml"));
 			Scene scene = new Scene(root);
 			//scene.getStylesheets().add(getClass().getResource("..\\application\\application.css").toExternalForm());
 			primaryStage.setScene(scene);

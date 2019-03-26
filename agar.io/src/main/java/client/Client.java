@@ -5,20 +5,32 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.UnknownHostException;
-
+import javafx.concurrent.Task;
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
 
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
-import server.ClientListener;
-
-public class Client extends Thread {
+public class Client extends Task {
 	public static final String TRUSTTORE_LOCATION = "C:/Users/99031510240/alv";
 	public static PrintWriter writerC;
+	public static LoginController logInC;
+
+	
+
+	public void sendServer(String parameter) {
+		writerC.println(parameter);
+	}
+
+	public Object getlogInC() {
+		return logInC;
+	}
+
+	public void putLogInC(LoginController loginController) {
+		logInC = loginController;
+
+	}
 
 	@Override
-	public void run() {
+	protected Object call() throws Exception {
 		final SSLSocket client;
 		System.setProperty("javax.net.ssl.trustStore", TRUSTTORE_LOCATION);
 		SSLSocketFactory sf = (SSLSocketFactory) SSLSocketFactory.getDefault();
@@ -35,19 +47,17 @@ public class Client extends Thread {
 					BufferedReader readerC;
 					try {
 						readerC = new BufferedReader(new InputStreamReader(client.getInputStream()));
-						while (true) {
-							Alert dialog;
-							String line = readerC.readLine();
-							if(line.equals(ClientListener.REGISTER_SUCCESS)) {
-
-							} else if(line.equals(ClientListener.SESSION_FAILED)){
-								dialog = new Alert(AlertType.ERROR);
-								dialog.setTitle("Session failed");
-								dialog.setContentText(ClientListener.SESSION_FAILED);
-								dialog.show();
-							}
+						while (client.isConnected()) {
+							final String line = readerC.readLine();
+							logInC.showMessage(line);
 						}
 					} catch (IOException e) {
+							try {
+								client.shutdownInput();
+							} catch (IOException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
 						e.printStackTrace();
 					}
 
@@ -55,16 +65,14 @@ public class Client extends Thread {
 			});
 
 			tServer.start();
-		writerC = new PrintWriter(client.getOutputStream(), true);
+			writerC = new PrintWriter(client.getOutputStream(), true);
 
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-}
-
-	public void sendServer(String parameter) {
-					writerC.println(parameter);
+		return null;
 	}
+
 }
