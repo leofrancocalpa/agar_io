@@ -2,6 +2,7 @@ package gui;
 
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 
 public class Sprite {
 
@@ -16,6 +17,7 @@ public class Sprite {
 	public double velocityY;
 	private double width;
 	private double height;
+	public Color color;
 
 	public Sprite(String id) {
 		this.id = id;
@@ -25,7 +27,7 @@ public class Sprite {
 		velocityY = 5;
 	}
 
-	public void setMass(int width, int height) {
+	public void setMass(double width, double height) {
 		this.width += width;
 		this.height += height;
 	}
@@ -72,6 +74,7 @@ public class Sprite {
 	}
 
 	public void render(GraphicsContext gc) {
+		gc.setFill(color);
 		gc.fillOval(positionX, positionY, width, height);
 	}
 

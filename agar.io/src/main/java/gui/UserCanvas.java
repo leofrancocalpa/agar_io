@@ -15,43 +15,42 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-public class UserCanvas extends Application {
+public class UserCanvas extends AnchorPane {
 
 	private Stage primaryStage;
 	private Client user;
 
-	@Override
-	public void start(Stage PprimaryStage) {
-		primaryStage = PprimaryStage;
-		user = new Client();
+	
+	public void start() {
+		//primaryStage = PprimaryStage;
+		//user = new Client();
 
-		primaryStage.setTitle("Agar.io");
-		Group root = new Group();
+		//primaryStage.setTitle("Agar.io");
+		//Group root = new Group();
 		Canvas canvas = new Canvas(1024, 680);
 		final GraphicsContext gc = canvas.getGraphicsContext2D();
+		this.getChildren().add(canvas);
+		
 
-//      final Sprite player = new Sprite("ww");
+		final Sprite player = new Sprite("qwe");
 //      player.setPosition(232, 128);
 //    	player.setMass(35,35);
 //    	player.render(gc);
 
 		drawShapes(gc, user);
 
-		root.getChildren().add(canvas);
-		Scene scene = new Scene(root);
-		primaryStage.setFullScreenExitHint("Juego Iniciado");
-		primaryStage.setScene(scene);
-		primaryStage.setFullScreen(true);
-		primaryStage.show();
+		
 		// Clear away portions as the user drags the mouse
-		canvas.setOnMouseMoved(new EventHandler<MouseEvent>() {
+		canvas.setOnMouseEntered(new EventHandler<MouseEvent>() {
 			public void handle(MouseEvent e) {
+				
 
 			}
 		});
@@ -128,8 +127,5 @@ public class UserCanvas extends Application {
 
 	}
 
-	public static void main(String[] args) {
-		launch(args);
-	}
 
 }

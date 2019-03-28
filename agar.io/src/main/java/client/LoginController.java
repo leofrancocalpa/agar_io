@@ -1,9 +1,11 @@
 package client;
 
 
+import gui.UserCanvas;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
@@ -31,18 +33,21 @@ public class LoginController {
 
     public LoginController() {
     	client = new Client();
-    	client.start();
+    	//client.start();
 	}
     @FXML
     void login(ActionEvent event) {
-    	client.sendServer(txt_email.getText() + " " + txt_password.getText());
+    	//client.sendServer(txt_email.getText() + " " + txt_password.getText());
 
     	FXMLLoader loader = new FXMLLoader();
     	Stage alv = new Stage();
     	try {
-			AnchorPane root = loader.load(getClass().getResource("canvas.fxml").openStream());
-			Scene scene = new Scene(root);
+			//AnchorPane root = loader.load(getClass().getResource("canvas.fxml").openStream());
+			UserCanvas canvas = new UserCanvas();
+			canvas.start();
+			Scene scene = new Scene(canvas, 500, 500);
 			alv.setScene(scene);
+			alv.setFullScreen(true);
 			alv.show();
 		} catch(Exception e) {
 			e.printStackTrace();
