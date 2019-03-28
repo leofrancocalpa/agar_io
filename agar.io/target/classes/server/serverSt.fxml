@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.text.*?>
+
+<VBox prefHeight="400.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="server.serverStController">
+  <children>
+    <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="300.0" prefWidth="600.0" VBox.vgrow="ALWAYS">
+      <children>
+        <Label fx:id="title" alignment="CENTER" layoutX="217.0" layoutY="40.0" prefHeight="47.0" prefWidth="207.0" style="&#10;" text="Server Status" textAlignment="CENTER" textFill="#293197" wrapText="false">
+          <font>
+            <Font size="26.0" />
+          </font>
+        </Label>
+            <Button fx:id="butStart" layoutX="281.0" layoutY="87.0" mnemonicParsing="false" onAction="#startServer" text="Start Server" />
+            <TitledPane fx:id="usersTitledPane" animated="false" layoutX="14.0" layoutY="154.0" prefHeight="232.0" prefWidth="275.0" text="Users Connected">
+               <content>
+                  <TableView fx:id="usersTable" prefHeight="200.0" prefWidth="200.0">
+                    <columns>
+                      <TableColumn prefWidth="189.0" text="Nickname" />
+                      <TableColumn prefWidth="84.0" text="Score" />
+                    </columns>
+                  </TableView>
+               </content>
+            </TitledPane>
+            <TitledPane fx:id="matchTitledPane" animated="false" layoutX="351.0" layoutY="154.0" prefHeight="232.0" prefWidth="275.0" text="Match Stats">
+               <content>
+                  <TableView fx:id="matchTable" prefHeight="200.0" prefWidth="200.0">
+                     <columns>
+                        <TableColumn prefWidth="182.0" text="Item" />
+                        <TableColumn prefWidth="91.0" text="Value" />
+                     </columns>
+                  </TableView>
+               </content>
+            </TitledPane>
+            <Label fx:id="time" alignment="CENTER" layoutX="14.0" layoutY="14.0" prefHeight="32.0" prefWidth="156.0" style="&#10;" text="00:00" textAlignment="CENTER" textFill="#000214" wrapText="false">
+               <font>
+                  <Font name="Book Antiqua" size="42.0" />
+               </font>
+            </Label>
+      </children>
+    </AnchorPane>
+  </children>
+</VBox>

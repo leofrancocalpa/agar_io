@@ -13,7 +13,7 @@ public class Server extends Thread{
 	public static final String KEYSTORE_PASSWORD = "123456";
 
 
-	private static HashMap<Integer, ClientListener> threads = new HashMap<Integer, ClientListener>();
+	private static HashMap<Integer, SSLConnection> threads = new HashMap<Integer, SSLConnection>();
 	private static ThreadGroup threadsGroup = new ThreadGroup("threadsGroup");
 	private static HashMap<String, User> users = new HashMap<String, User>();
 
@@ -26,7 +26,7 @@ public class Server extends Thread{
 			SSLServerSocket server = (SSLServerSocket) ssf.createServerSocket(8030);
 			while (true) {
 				SSLSocket c = (SSLSocket) server.accept();
-				ClientListener threadd = new ClientListener(c);
+				SSLConnection threadd = new SSLConnection(c);
 				System.out.println(c.hashCode());
 				int address = c.hashCode();
 				threads.put(address, threadd);
@@ -47,7 +47,7 @@ public class Server extends Thread{
 	private static String signIn(String email, String nickname, String password) {
 		User user = new User(email, nickname, password);
 		users.put(email, user);
-		return ClientListener.REGISTER_SUCCESS;
+		return SSLConnection.REGISTER_SUCCESS;
 	}
 
 	public static void playGameOf(int hashC, String[] userAndPass) {
@@ -57,9 +57,9 @@ public class Server extends Thread{
 				toPlay.setInGame(true);
 		}
 		if (toPlay == null || !toPlay.isInGame())
-			threads.get(hashC).writeSessionStatus(ClientListener.SESSION_FAILED);
+			threads.get(hashC).writeSessionStatus(SSLConnection.SESSION_FAILED);
 		else
-			threads.get(hashC).writeSessionStatus(ClientListener.STARTING_MATCH);
+			threads.get(hashC).writeSessionStatus(SSLConnection.STARTING_MATCH);
 	}
 
 	public static void sendStateFromGame(int hash, String[] arregloS) {

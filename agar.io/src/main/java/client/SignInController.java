@@ -6,7 +6,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
-import server.ClientListener;
 
 public class SignInController {
 
@@ -30,7 +29,7 @@ public class SignInController {
 
     @FXML
     void sign_In(ActionEvent event) {
-    	client.sendServer(txt_email.getText() + " " + txt_nickname.getText() + " " + txt_paasword.getText());
+    	client.sendToServer(txt_email.getText() + " " + txt_nickname.getText() + " " + txt_paasword.getText());
     }
 
 }

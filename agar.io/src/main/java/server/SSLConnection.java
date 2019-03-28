@@ -9,7 +9,7 @@ import java.net.SocketException;
 
 import javax.net.ssl.SSLSocket;
 
-public class ClientListener extends Thread {
+public class SSLConnection extends Thread {
 
 	public static final String SESSION_FAILED = "Password or email wrong";
 	public static final String REGISTER_SUCCESS = "User created successfully";
@@ -19,7 +19,7 @@ public class ClientListener extends Thread {
 	BufferedReader readerHS;
 	PrintWriter writerHS;
 
-	public ClientListener(SSLSocket request) {
+	public SSLConnection(SSLSocket request) {
 		super();
 
 		client = request;
