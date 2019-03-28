@@ -3,6 +3,8 @@ package client;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+
+import gui.UserCanvas;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -45,7 +47,13 @@ public class LoginController {
 	}
     @FXML
     void login(ActionEvent event) {
+    	stage.hide();
     	client.sendServer(txt_email.getText() + " " + txt_password.getText());
+    	UserCanvas canvas = new UserCanvas();
+    	Scene scene = new Scene(canvas);
+    	stage.setScene(scene);
+    	stage.setFullScreen(true);
+    	stage.show();
     }
 
     @FXML
