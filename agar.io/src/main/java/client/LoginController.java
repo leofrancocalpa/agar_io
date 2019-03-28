@@ -47,19 +47,26 @@ public class LoginController {
 	}
     @FXML
     void login(ActionEvent event) {
-    	stage.hide();
+    	stage = new Stage();
+    	
     	client.sendServer(txt_email.getText() + " " + txt_password.getText());
-    	UserCanvas canvas = new UserCanvas();
-    	Scene scene = new Scene(canvas);
-    	stage.setScene(scene);
-    	stage.setFullScreen(true);
-    	stage.show();
+    	boolean conection_true = true; //Devolver true si el usuario se pudo logear
+    	if(conection_true) {
+    		UserCanvas canvas = new UserCanvas();
+    		canvas.setClient(client);
+    		canvas.start();
+        	Scene scene = new Scene(canvas);
+        	stage.setScene(scene);
+        	stage.setFullScreen(true);
+        	stage.show();
+    	}
+    	
     }
 
     @FXML
     void sign_In(ActionEvent event) {
     	FXMLLoader loader = new FXMLLoader();
-    	stage = new Stage();
+    	
     	try {
 			AnchorPane root = loader.load(getClass().getResource("signin.fxml").openStream());
 
