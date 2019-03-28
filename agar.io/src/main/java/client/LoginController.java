@@ -55,9 +55,27 @@ public class LoginController {
 			startGame();
 	}
 
-	@FXML
-	void sign_In(ActionEvent event) {
-		FXMLLoader loader = new FXMLLoader();
+    @FXML
+    void login(ActionEvent event) {
+    	stage = new Stage();
+    	
+    	client.sendToServer(txt_email.getText() + " " + txt_password.getText());
+		int cont = 3;
+		while (!client.isOnFire() && cont > 0) {
+			try {
+				Thread.sleep(500);
+				cont--;
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		if (client.isOnFire())
+			startGame();
+    }
+
+    @FXML
+    void sign_In(ActionEvent event) {
+    	FXMLLoader loader = new FXMLLoader();
 		stage = new Stage();
 		try {
 			AnchorPane root = loader.load(getClass().getResource("signin.fxml").openStream());
@@ -75,18 +93,13 @@ public class LoginController {
 	}
 
 	void startGame() {
-		FXMLLoader loader = new FXMLLoader();
-		Stage alv = new Stage();
-		try {
-			AnchorPane root = loader.load(getClass().getResource("canvas.fxml").openStream());
-			Scene scene = new Scene(root);
-			alv.setScene(scene);
-			alv.show();
-		} catch (Exception e) {
-			e.printStackTrace();
-		} catch (Throwable e) {
-			e.printStackTrace();
-		}
+		UserCanvas canvas = new UserCanvas();
+    		canvas.setClient(client);
+    		canvas.start();
+        	Scene scene = new Scene(canvas);
+        	stage.setScene(scene);
+        	stage.setFullScreen(true);
+        	stage.show();
 	}
 
 	void closeSigninWindow() {
