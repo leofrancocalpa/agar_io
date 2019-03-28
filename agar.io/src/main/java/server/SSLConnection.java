@@ -26,49 +26,32 @@ public class SSLConnection extends Thread {
 		try {
 			writerHS = new PrintWriter(client.getOutputStream(), true);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
+	@Override
 	public void run() {
 
 		try {
 			readerHS = new BufferedReader(new InputStreamReader(client.getInputStream()));
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
 		while (!client.isClosed()) {
 			String line = "";
-			try {
 				String[] supported = client.getSupportedCipherSuites();
 				client.setEnabledCipherSuites(supported);
 				line = readerHS.readLine();
 				System.out.println(line);
-				onInputLine(line);
-			} catch (SocketException e1) {
-				System.out.println("One user has left before to register");
-			} catch (IOException e) {
-				try {
-					client.close();
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-				e.printStackTrace();
-			}
+				executeByClientToServer(line);
 		}
-		try {
-			readerHS.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		readerHS.close();
+		} catch (SocketException e1) {
+			System.out.println("One user has left");
+		} catch (IOException e1) {
+			e1.printStackTrace();
 		}
-
 	}
 
-	public void onInputLine(String line) {
+	public void executeByClientToServer(String line) {
 		String[] arregloS = line.split(" ");
 		int hash = client.hashCode();
 		if (arregloS.length == 3)

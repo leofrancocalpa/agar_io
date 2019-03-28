@@ -7,7 +7,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TitledPane;
 
-public class serverStController {
+public class ServerStController {
 
 	@FXML
 	private Button butStart;
@@ -34,7 +34,10 @@ public class serverStController {
 
 	@FXML
 	void startServer (ActionEvent event) {
-		server = new Server();
-		server.start();
+		server.startSSL();
+	}
+	
+	void putServer(Server server) {
+		this.server = server;
 	}
 }

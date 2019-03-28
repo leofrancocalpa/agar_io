@@ -12,14 +12,18 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import server.SSLConnection;
-import server.User;
 import javafx.scene.Parent;
 
 public class Client extends Application{
 	public static final String TRUSTTORE_LOCATION = "C:/Users/99031510240/alv";
 	public static PrintWriter writerC;
-	public static LoginController logInC;
+	private static LoginController logInC;
+	
 	private boolean sessionOnFire;
+	
+	private String[] enemies;
+	private String[] player;
+	private String[] food;
 	
 	public void sendToServer(String parameter) {
 		writerC.println(parameter);

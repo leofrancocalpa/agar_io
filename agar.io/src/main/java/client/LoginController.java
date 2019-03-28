@@ -39,22 +39,6 @@ public class LoginController {
 		this.client = client;
 	}
 
-	@FXML
-	void login(ActionEvent event) {
-		client.sendToServer(txt_email.getText() + " " + txt_password.getText());
-		int cont = 3;
-		while (!client.isOnFire() && cont > 0) {
-			try {
-				Thread.sleep(500);
-				cont--;
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
-		if (client.isOnFire())
-			startGame();
-	}
-
     @FXML
     void login(ActionEvent event) {
     	stage = new Stage();
