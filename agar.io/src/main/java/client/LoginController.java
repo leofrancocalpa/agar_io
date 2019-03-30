@@ -1,6 +1,5 @@
 package client;
 
-
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
@@ -15,59 +14,54 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import server.ClientListener;
+import server.SSLConnection;
 import server.Server;
 
 public class LoginController {
 
-    @FXML
-    private TextField txt_email;
+	@FXML
+	private TextField txt_email;
 
-    @FXML
-    private TextField txt_password;
+	@FXML
+	private TextField txt_password;
 
-    @FXML
-    private Button btn_play;
+	@FXML
+	private Button btn_play;
 
-    @FXML
-    private Button btn_singin;
+	@FXML
+	private Button btn_singin;
 
-    private Client client;
+	private Client client;
 
-    private Stage stage;
+	private Stage stage;
 
-    public LoginController() {
-    	client = new Client();
-    	try {
-			client.call();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-    	client.putLogInC(this);
+	public void putClient(Client client) {
+		this.client = client;
 	}
+
     @FXML
     void login(ActionEvent event) {
     	stage = new Stage();
     	
-    	client.sendServer(txt_email.getText() + " " + txt_password.getText());
-    	boolean conection_true = true; //Devolver true si el usuario se pudo logear
-    	if(conection_true) {
-    		UserCanvas canvas = new UserCanvas();
-    		canvas.setClient(client);
-    		canvas.start();
-        	Scene scene = new Scene(canvas);
-        	stage.setScene(scene);
-        	stage.setFullScreen(true);
-        	stage.show();
-    	}
-    	
+    	client.sendToServer(txt_email.getText() + " " + txt_password.getText());
+		int cont = 3;
+		while (!client.isOnFire() && cont > 0) {
+			try {
+				Thread.sleep(500);
+				cont--;
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		if (client.isOnFire())
+			startGame();
     }
 
     @FXML
     void sign_In(ActionEvent event) {
     	FXMLLoader loader = new FXMLLoader();
-    	
-    	try {
+		stage = new Stage();
+		try {
 			AnchorPane root = loader.load(getClass().getResource("signin.fxml").openStream());
 
 			SignInController signinC = loader.getController();
@@ -75,42 +69,36 @@ public class LoginController {
 			Scene scene = new Scene(root);
 			stage.setScene(scene);
 			stage.show();
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
-    }
+	}
 
-    void startGame() {
-    	FXMLLoader loader = new FXMLLoader();
-    	Stage alv = new Stage();
-    	try {
-			AnchorPane root = loader.load(getClass().getResource("canvas.fxml").openStream());
-			Scene scene = new Scene(root);
-			alv.setScene(scene);
-			System.out.println("entra start game");
-			alv.show();
-		} catch(Exception e) {
-			e.printStackTrace();
-		} catch (Throwable e) {
-			e.printStackTrace();
-		}
-    }
+	void startGame() {
+		UserCanvas canvas = new UserCanvas();
+    		canvas.setClient(client);
+    		canvas.start();
+        	Scene scene = new Scene(canvas);
+        	stage.setScene(scene);
+        	stage.setFullScreen(true);
+        	stage.show();
+	}
 
-    void closeSigninWindow(){
-    	stage.hide();
-    }
+	void closeSigninWindow() {
+		stage.hide();
+	}
 
 	public void showMessage(String line) {
 
-		if(line.equals(ClientListener.REGISTER_SUCCESS)){
-			JOptionPane.showMessageDialog(new JFrame(), ClientListener.REGISTER_SUCCESS, "Register complete", JOptionPane.INFORMATION_MESSAGE);
+		if (line.equals(SSLConnection.REGISTER_SUCCESS)) {
+			JOptionPane.showMessageDialog(new JFrame(), SSLConnection.REGISTER_SUCCESS, "Register complete",
+					JOptionPane.INFORMATION_MESSAGE);
 //		closeSigninWindow();
-		} else if(line.equals(ClientListener.SESSION_FAILED)){
-			JOptionPane.showMessageDialog(new JFrame(), ClientListener.SESSION_FAILED, "Session failed", JOptionPane.ERROR_MESSAGE);
-		} else {
-			startGame();
+		} else if (line.equals(SSLConnection.SESSION_FAILED)) {
+			JOptionPane.showMessageDialog(new JFrame(), SSLConnection.SESSION_FAILED, "Session failed",
+					JOptionPane.ERROR_MESSAGE);
 		}
 	}
 }
