@@ -71,7 +71,7 @@ public class Match
 	 * @param food array with info about all ball of food on game. {x,y,w,h,id,T/F}
 	 * @param players {x,y,w,h,id,T/F}
 	 */
-	public void updateGame(String[] players) {
+	public void updateGame( String[] players) {
 		//update position and mass of players and food
 //		for(String data : food) {
 //			String[] info = data.split(",");
@@ -82,7 +82,7 @@ public class Match
 //			if(info[5].equals("T")) ball.setAlive(true);
 //			if(info[5].equals("F")) ball.setAlive(false);
 //		}
-//		
+		
 		for(String data : players) {
 			String[] info = data.split(",");
 			int x = (int) Double.parseDouble(info[0]);
@@ -102,6 +102,8 @@ public class Match
 		HashMap<String, Ball> hm = (HashMap<String, Ball>) players.clone();
 		compareIntersections(hm);
 	}
+	
+	
 	
 	public void compareIntersections(HashMap<String, Ball> hm) {
 		if(hm.size()<2) {
