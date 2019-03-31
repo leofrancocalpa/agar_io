@@ -2,6 +2,7 @@ package server;
 
 import java.io.IOException;
 import java.lang.Thread.State;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -14,10 +15,12 @@ import javax.net.ssl.SSLSocket;
 
 import game.Match;
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 public class Server extends Application {
 
@@ -29,8 +32,10 @@ public class Server extends Application {
 //	private static ThreadGroup threadsGroup = new ThreadGroup("threadsGroup");
 	private static HashMap<String, User> users = new HashMap<String, User>();
 	private static Match match;
+	private InetAddress ip;
 	
 	public void startSSL() {
+
 		final SSLServerSocketFactory ssf = (SSLServerSocketFactory) SSLServerSocketFactory.getDefault();
 		System.setProperty("javax.net.ssl.keyStore", KEYSTORE_LOCATION);
 		System.setProperty("javax.net.ssl.keyStorePassword", KEYSTORE_PASSWORD);
@@ -121,13 +126,20 @@ public class Server extends Application {
 	}
 	
 	@Override
-	public void start(Stage primaryStage) {
+	public void start(final Stage primaryStage) {
 		try {
 			FXMLLoader loader = new FXMLLoader();
 			Parent root = loader.load(getClass().getResource("serverSt.fxml").openStream());
 			Scene scene = new Scene(root);
 			primaryStage.setScene(scene);
 			primaryStage.show();
+			primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+				
+				public void handle(WindowEvent event) {
+					// TODO Auto-generated method stub
+					primaryStage.close();
+				}
+			});
 			serverSt = loader.getController();
 			serverSt.putServer(this);
 		} catch (Exception e) {

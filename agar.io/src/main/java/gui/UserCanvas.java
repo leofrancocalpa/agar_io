@@ -47,12 +47,12 @@ public class UserCanvas extends AnchorPane {
 
 	private void drawShapes(final GraphicsContext gc, final Client user) {
 
-		String[] infoPlayer = user.getInfoPlayer();
+		final String[] infoPlayer = user.getInfoPlayer();
 		int user_x = Integer.parseInt(infoPlayer[0]);
 		int user_y = Integer.parseInt(infoPlayer[1]);
 		double user_w = Double.parseDouble(infoPlayer[2]);
 		double user_h = Double.parseDouble(infoPlayer[3]);
-		String user_id = infoPlayer[4];
+		final String user_id = infoPlayer[4];
 
 		final Sprite player = new Sprite(user_id);
 		player.setPosition(user_x, user_y);
@@ -106,7 +106,7 @@ public class UserCanvas extends AnchorPane {
 
 						player.render(gc);
 						String[] state = { player.x() + "", player.y() + "", player.width() + "",
-								player.height() + "" };
+								player.height() + "", user_id, infoPlayer[5] };
 						user.updatePlayer(state);
 					}
 				});

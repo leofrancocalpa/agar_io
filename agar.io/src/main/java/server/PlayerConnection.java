@@ -40,15 +40,15 @@ public class PlayerConnection extends Thread {
 			while (true) {
 				for (int i = 0; i < clients.size(); i++) {
 					String line = readerC.get(i).readLine();
-					System.out.println(line);
 					playersInfo[i] = line;
 				}
+				System.out.println(playersInfo[0]);
 				Server.setGamePositions(playersInfo);
 				stateFromGame = Server.getStateFromGame();
 				for (int i = 0; i < clients.size(); i++) {
 					writerC.get(i).println(stateFromGame);
 				}
-				sleep(80);
+				sleep(1000);
 			}
 
 //			readerC.get(i).close();

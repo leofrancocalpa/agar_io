@@ -11,9 +11,11 @@ import javax.net.SocketFactory;
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import server.PlayerConnection;
 import server.SSLConnection;
 import javafx.scene.Parent;
@@ -35,13 +37,20 @@ public class Client extends Application{
 	private String[] food;
 	
 	@Override
-	public void start(Stage primaryStage) {
+	public void start(final Stage primaryStage) {
 		try {
 			FXMLLoader loader = new FXMLLoader();
 			Parent root = loader.load(getClass().getResource("login.fxml").openStream());
 			Scene scene = new Scene(root);
 			primaryStage.setScene(scene);
 			primaryStage.show();
+			primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+				
+				public void handle(WindowEvent event) {
+					// TODO Auto-generated method stub
+					primaryStage.close();
+				}
+			});
 			logInC = loader.getController();
 			logInC.putClient(this);
 			connectToServer();
@@ -75,7 +84,7 @@ public class Client extends Application{
 				SSLSocketFactory sf = (SSLSocketFactory) SSLSocketFactory.getDefault();
 				
 				try {
-					client = (SSLSocket) sf.createSocket("localhost", 8030);
+					client = (SSLSocket) sf.createSocket("Voyager", 8030);
 					String[] supported = client.getSupportedCipherSuites();
 					client.setEnabledCipherSuites(supported);
 					writerC = new PrintWriter(client.getOutputStream(), true);
@@ -120,7 +129,7 @@ public class Client extends Application{
 		SocketFactory sf = SocketFactory.getDefault();
 		
 		try {
-			client = sf.createSocket("localhost", 8040);
+			client = sf.createSocket("Voyager", 8040);
 			writerC = new PrintWriter(client.getOutputStream(), true);
 			writerC.println(nickName);
 			
@@ -140,7 +149,6 @@ public class Client extends Application{
 					}
 					else {
 						posPlayer = Integer.parseInt(infoGame.substring(infoGame.length()-1));
-						player = enemies[posPlayer].split(",");
 						sessionStatus = PLAYING;
 					}
 //					aquí debería llenar la información del cliente sobre el juego
@@ -160,6 +168,7 @@ public class Client extends Application{
 			for (int i = 0; i < infoPlayer.length; i++) {
 				sb.append(infoPlayer[i] + ",");
 			}
+			System.out.println(sb.toString());
 			return sb.toString();
 		}
 	});
@@ -206,11 +215,11 @@ public class Client extends Application{
 	}
 	
 	public void updateGame(String entry) {
-		System.out.println(entry);
 		String[] arreglos = entry.split("/");
 		enemies = arreglos[0].split(" ");
 		food = arreglos[1].split(" ");
-		player = enemies[posPlayer].split(",");
+		if(player == null)
+			player = enemies[posPlayer].split(",");
 	}
 	
 	public int getStatus() {
