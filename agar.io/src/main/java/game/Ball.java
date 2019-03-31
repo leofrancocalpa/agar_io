@@ -8,6 +8,8 @@ public class Ball {
 	
 	public static final String PLAYER="Player";
 	public static final String FOOD="Food";
+
+	public double[] colors;
 	
 	private String id;
 	private int x;
@@ -16,14 +18,16 @@ public class Ball {
 	private double velocityY;
 	private double width;
 	private double height;
-	public Color color;
 	private boolean isAlive;
 
 	public Ball(String id) {
 		this.id = id;
 		x = 0;
 		y = 0;
+		width=0;
+		height=0;
 		isAlive=true;
+		colors = new double[3];
 	}
 
 	public void setAlive(boolean live) {
@@ -94,10 +98,10 @@ public class Ball {
 
 	public String toString() {
 		if(isAlive) {
-			return x+","+y+","+width+","+height+","+id+","+"T";	
+			return x+","+y+","+width+","+height+","+id+","+"T"+","+colors[0]+","+colors[1]+","+colors[2];	
 		}
 		else {
-			return x+","+y+","+width+","+height+","+id+","+"F";
+			return x+","+y+","+width+","+height+","+id+","+"F"+","+colors[0]+","+colors[1]+","+colors[2];
 		}
 	}
 }
