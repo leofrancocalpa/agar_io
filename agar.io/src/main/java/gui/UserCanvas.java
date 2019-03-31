@@ -26,7 +26,6 @@ public class UserCanvas extends AnchorPane {
 
 	private Stage primaryStage;
 	private Client user;
-
 	
 	public void start() {
 		
@@ -34,9 +33,7 @@ public class UserCanvas extends AnchorPane {
 		final GraphicsContext gc = canvas.getGraphicsContext2D();
 		this.getChildren().add(canvas);
 
-
 		drawShapes(gc, user);
-
 		
 		// Clear away portions as the user drags the mouse
 		canvas.setOnMouseEntered(new EventHandler<MouseEvent>() {
@@ -53,8 +50,8 @@ public class UserCanvas extends AnchorPane {
 		String[] infoPlayer = user.getInfoPlayer();
 		int user_x = Integer.parseInt(infoPlayer[0]);
 		int user_y = Integer.parseInt(infoPlayer[1]);
-		int user_w = Integer.parseInt(infoPlayer[2]);
-		int user_h = Integer.parseInt(infoPlayer[3]);
+		double user_w = Double.parseDouble(infoPlayer[2]);
+		double user_h = Double.parseDouble(infoPlayer[3]);
 		String user_id = infoPlayer[4];
 
 		final Sprite player = new Sprite(user_id);
@@ -67,13 +64,14 @@ public class UserCanvas extends AnchorPane {
 		KeyFrame kf = new KeyFrame(Duration.seconds(0.04), // 0.017 -> 60 FPS
 				new EventHandler<ActionEvent>() {
 					public void handle(ActionEvent ae) {
-						String[] players = user.getPlayerFromGame();
+						gc.clearRect(0, 0, 1024, 680);
+						String[] players = user.getPlayersFromGame();
 						for (String info : players) {
 							String[] infoPlayer = info.split(",");
 							int user_x = Integer.parseInt(infoPlayer[0]);
 							int user_y = Integer.parseInt(infoPlayer[1]);
-							int user_w = Integer.parseInt(infoPlayer[2]);
-							int user_h = Integer.parseInt(infoPlayer[3]);
+							double user_w = Double.parseDouble(infoPlayer[2]);
+							double user_h = Double.parseDouble(infoPlayer[3]);
 							String user_id = infoPlayer[4];
 
 							final Sprite player = new Sprite(user_id);
@@ -87,8 +85,8 @@ public class UserCanvas extends AnchorPane {
 							String[] infoFood = info.split(",");
 							int food_x = Integer.parseInt(infoFood[0]);
 							int food_y = Integer.parseInt(infoFood[1]);
-							int food_w = Integer.parseInt(infoFood[2]);
-							int food_h = Integer.parseInt(infoFood[3]);
+							double food_w = Double.parseDouble(infoFood[2]);
+							double food_h = Double.parseDouble(infoFood[3]);
 
 							final Sprite aFood = new Sprite(Sprite.FOOD);
 							aFood.setPosition(food_x, food_y);
@@ -106,7 +104,6 @@ public class UserCanvas extends AnchorPane {
 						int ny = (int) (player.velocityY * Math.sin(theta));
 						player.changePosition(nx, ny);
 
-						gc.clearRect(0, 0, 1024, 680);
 						player.render(gc);
 						String[] state = { player.x() + "", player.y() + "", player.width() + "",
 								player.height() + "" };

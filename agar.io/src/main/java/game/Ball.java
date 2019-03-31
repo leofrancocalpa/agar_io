@@ -94,10 +94,10 @@ public class Ball {
 
 	public String toString() {
 		if(isAlive) {
-			return x+","+y+","+width+","+height+","+id+"T";	
+			return x+","+y+","+width+","+height+","+id+","+"T";	
 		}
 		else {
-			return x+","+y+","+width+","+height+","+id+"F";
+			return x+","+y+","+width+","+height+","+id+","+"F";
 		}
 	}
 }

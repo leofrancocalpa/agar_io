@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.lang.Thread.State;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.net.ServerSocketFactory;
@@ -62,18 +63,19 @@ public class Server extends Application {
 	}
 
 	public void startMatchConnection() {
+		match = new Match();
 		ServerSocketFactory ssf = ServerSocketFactory.getDefault();
-		PlayerConnection clientListener = new PlayerConnection();
+		PlayerConnection matchPlayer = new PlayerConnection();
 			try {
-				while (true) {
 				ServerSocket server = ssf.createServerSocket(8040);
+//				while (matchPlayer.clientsCount() < 2) {
 				Socket c = server.accept();
-				clientListener.addSocket(c);
-				}
+				matchPlayer.addSocket(c);
+//				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			clientListener.start();
+			matchPlayer.start();
 	}
 
 	public static void registerNewUser(int hashC, String[] info) {
@@ -95,18 +97,27 @@ public class Server extends Application {
 		}
 		if (toPlay == null || !toPlay.isInGame())
 			threads.get(hashC).writeSessionStatus(SSLConnection.SESSION_FAILED);
-		else
-			threads.get(hashC).writeSessionStatus(SSLConnection.STARTING_MATCH);
+		else {
+			threads.get(hashC).writeSessionStatus("Hello "+ toPlay.getNickname() +" " +SSLConnection.WAITING_MATCH);
+		}
 	}
 
 	public static String getStateFromGame() {
-		String gameStatus = match.getPlayersFromGame().toString();
-		gameStatus += match.getFoodFromGame().toString();
-		return gameStatus;
+		StringBuilder sb = new StringBuilder();
+		String[] players = match.getPlayersFromGame();
+		for (int i = 0; i < players.length; i++) {
+			sb.append(players[i] + " ");
+		}
+		sb.append("/");
+		String[] food = match.getFoodFromGame();
+		for (int i = 0; i < food.length; i++) {
+			sb.append(food[i] + " ");
+		}
+		return sb.toString();
 	}
 
 	public static void setGamePositions(String[] playersInfo) {
-		match.setGameStatus(playersInfo);
+		match.updateGame(playersInfo);
 	}
 	
 	@Override
@@ -126,5 +137,13 @@ public class Server extends Application {
 
 	public static void main(String[] args) {
 		launch(args);
+	}
+
+	public static void initializeGame(String[] playersInfo) {
+		ArrayList<String> players = new ArrayList<String>();
+		for (int i = 0; i < playersInfo.length; i++) {
+			players.add(playersInfo[i]);
+		}
+		match.initialize(players);
 	}
 }

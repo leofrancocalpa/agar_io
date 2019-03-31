@@ -40,10 +40,10 @@ public class Match
 			double R = rd.nextDouble();
 			double G = rd.nextDouble();
 			double B = rd.nextDouble();
-			Color color = new Color(R,G,B,100);
+			Color color = new Color(R,G,B,1);
 			newFood.color=color;
 			newFood.setPosition(posX, posY);
-			food.set(i, newFood);
+			food.add(newFood);
 		}
 		
 		for(int i=0; i<playersFromServer.size(); i++) {
@@ -56,7 +56,7 @@ public class Match
 			double R = rd.nextDouble();
 			double G = rd.nextDouble();
 			double B = rd.nextDouble();
-			Color color = new Color(R,G,B,100);
+			Color color = new Color(R,G,B,1);
 			newPlayer.color=color;
 			newPlayer.setPosition(posX, posY);
 			//players.put(newPlayer.getId(), newPlayer);
@@ -64,8 +64,11 @@ public class Match
 		}
 	}
 	
-	public void updateGame(String[] food, String[] players) {
-		//update position and mass of players and food
+	public void updateGame(String[] players) {
+//		this.players = new ArrayList<Ball>();
+		for (int i = 0; i < players.length; i++) {
+//			por desarrollar
+		}
 		iterationInGame();
 	}
 	
@@ -90,7 +93,7 @@ public class Match
 	 * @return Array of strings that represent the position x,y and mass (width and height) of every player in the game
 	 * Example : player[0] -> x,y,w,h,id
 	 */
-	public String[] getPlayerFromGame() {
+	public String[] getPlayersFromGame() {
 		String[] players = new String[this.players.size()];
 		for(int i=0; i<players.length; i++) {
 			players[i]=this.players.get(i).toString();

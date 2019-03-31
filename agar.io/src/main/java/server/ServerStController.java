@@ -35,6 +35,7 @@ public class ServerStController {
 	@FXML
 	void startServer (ActionEvent event) {
 		server.startSSL();
+		server.startMatchConnection();
 	}
 	
 	void putServer(Server server) {

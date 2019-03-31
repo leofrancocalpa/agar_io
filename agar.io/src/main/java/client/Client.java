@@ -14,20 +14,48 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import server.PlayerConnection;
 import server.SSLConnection;
 import javafx.scene.Parent;
 
 public class Client extends Application{
 	public static final String TRUSTTORE_LOCATION = "C:/Users/99031510240/alv";
+	public static final int OFFLINE = 0;
+	public static final int READY = 1;
+	public static final int PLAYING = 2;
+	
 	public static PrintWriter writerC;
 	private static LoginController logInC;
 	
-	private boolean sessionOnFire;
-	
+	private int sessionStatus;
+	private int posPlayer;
+	private String nickName;
 	private String[] enemies;
 	private String[] player;
 	private String[] food;
 	
+	@Override
+	public void start(Stage primaryStage) {
+		try {
+			FXMLLoader loader = new FXMLLoader();
+			Parent root = loader.load(getClass().getResource("login.fxml").openStream());
+			Scene scene = new Scene(root);
+			primaryStage.setScene(scene);
+			primaryStage.show();
+			logInC = loader.getController();
+			logInC.putClient(this);
+			connectToServer();
+			sessionStatus = OFFLINE;
+			posPlayer = 0;
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void main(String[] args) {
+		launch(args);
+	}
+
 	public void sendToServer(String parameter) {
 		writerC.println(parameter);
 	}
@@ -51,7 +79,6 @@ public class Client extends Application{
 					String[] supported = client.getSupportedCipherSuites();
 					client.setEnabledCipherSuites(supported);
 					writerC = new PrintWriter(client.getOutputStream(), true);
-					// INicia hilo que lee desde el servidor
 					
 			Thread tServer = new Thread(new Runnable() {
 
@@ -62,9 +89,10 @@ public class Client extends Application{
 						while (client.isConnected()) {
 							final String serverAnswer = readerC.readLine();
 							logInC.showMessage(serverAnswer);
-							if(serverAnswer.equals(SSLConnection.STARTING_MATCH)) {
-								sessionOnFire = true;
+							if(serverAnswer.endsWith(SSLConnection.WAITING_MATCH)) {
+								nickName = serverAnswer.split(" ")[1];
 								connectToGame();
+								sessionStatus = READY;
 							}
 						}
 					} catch (IOException e) {
@@ -89,13 +117,12 @@ public class Client extends Application{
 	
 	public void connectToGame() {
 		final Socket client;
-		System.setProperty("javax.net.ssl.trustStore", TRUSTTORE_LOCATION);
 		SocketFactory sf = SocketFactory.getDefault();
 		
 		try {
 			client = sf.createSocket("localhost", 8040);
 			writerC = new PrintWriter(client.getOutputStream(), true);
-			// INicia hilo que lee desde el servidor
+			writerC.println(nickName);
 			
 	Thread tServer = new Thread(new Runnable() {
 
@@ -103,9 +130,19 @@ public class Client extends Application{
 			BufferedReader readerC;
 			try {
 				readerC = new BufferedReader(new InputStreamReader(client.getInputStream()));
+				System.out.println("Se conecta al juego");
 				while (client.isConnected()) {
 					final String infoGame = readerC.readLine();
 					System.out.println(infoGame);
+					if(!infoGame.startsWith(PlayerConnection.STARTING_MATCH)) {
+						updateGame(infoGame);
+						sendToServer(setFormatToCommas(getInfoPlayer()));
+					}
+					else {
+						posPlayer = Integer.parseInt(infoGame.substring(infoGame.length()-1));
+						player = enemies[posPlayer].split(",");
+						sessionStatus = PLAYING;
+					}
 //					aquí debería llenar la información del cliente sobre el juego
 				}
 			} catch (IOException e) {
@@ -116,6 +153,14 @@ public class Client extends Application{
 				}
 				e.printStackTrace();
 			}
+		}
+
+		private String setFormatToCommas(String[] infoPlayer) {
+			StringBuilder sb = new StringBuilder();
+			for (int i = 0; i < infoPlayer.length; i++) {
+				sb.append(infoPlayer[i] + ",");
+			}
+			return sb.toString();
 		}
 	});
 			
@@ -133,15 +178,15 @@ public class Client extends Application{
 	 * Example : food[0] -> x,y,w,h
 	 */
 	public String[] getFoodFromGame() {
-		return null;
+		return food;
 	}
 	/**
 	 * 
 	 * @return Array of strings that represent the position x,y and mass (width and height) of every player in the game
 	 * Example : player[0] -> x,y,w,h,id
 	 */
-	public String[] getPlayerFromGame() {
-		return null;
+	public String[] getPlayersFromGame() {
+		return enemies;
 	}
 	/**
 	 * 
@@ -150,7 +195,7 @@ public class Client extends Application{
 	 * infoPlayer[0]-> x , infoPlayer[1]-> y, infoPlayer[2]-> w, infoPlayer[3]-> h, infoPlayer[4]-> id
 	 */
 	public String[] getInfoPlayer() {
-		return null;
+		return player;
 	}
 	/**
 	 * 
@@ -160,32 +205,20 @@ public class Client extends Application{
 		player = state;
 	}
 	
-	@Override
-	public void start(Stage primaryStage) {
-		try {
-			FXMLLoader loader = new FXMLLoader();
-			Parent root = loader.load(getClass().getResource("login.fxml").openStream());
-			Scene scene = new Scene(root);
-			primaryStage.setScene(scene);
-			primaryStage.show();
-			logInC = loader.getController();
-			logInC.putClient(this);
-			connectToServer();
-			sessionOnFire = false;
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
+	public void updateGame(String entry) {
+		System.out.println(entry);
+		String[] arreglos = entry.split("/");
+		enemies = arreglos[0].split(" ");
+		food = arreglos[1].split(" ");
+		player = enemies[posPlayer].split(",");
 	}
 	
-	public static void main(String[] args) {
-		launch(args);
+	public int getStatus() {
+		return sessionStatus;
+	}
+	
+	public void setSession(int status) {
+		this.sessionStatus = status;
 	}
 
-	public boolean isOnFire() {
-		return sessionOnFire;
-	}
-
-	public void setSession(boolean onFire) {
-		this.sessionOnFire = onFire;
-	}
 }

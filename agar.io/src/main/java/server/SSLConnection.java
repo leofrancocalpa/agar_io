@@ -11,9 +11,9 @@ import javax.net.ssl.SSLSocket;
 
 public class SSLConnection extends Thread {
 
-	public static final String SESSION_FAILED = "Password or email wrong";
-	public static final String REGISTER_SUCCESS = "User created successfully";
-	public static final String STARTING_MATCH = "Starting match";
+	public static final String SESSION_FAILED = "Password or email wrong.";
+	public static final String REGISTER_SUCCESS = "User created successfully.";
+	public static final String WAITING_MATCH = "¡Wait for your friends!";
 
 	SSLSocket client;
 	BufferedReader readerHS;

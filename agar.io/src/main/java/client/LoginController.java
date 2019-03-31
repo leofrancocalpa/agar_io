@@ -44,17 +44,16 @@ public class LoginController {
     	stage = new Stage();
     	
     	client.sendToServer(txt_email.getText() + " " + txt_password.getText());
-		int cont = 3;
-		while (!client.isOnFire() && cont > 0) {
+		int cont = 120;
+		while (client.getStatus()!=Client.PLAYING && cont > 0) {
 			try {
-				Thread.sleep(500);
+				Thread.sleep(1000);
 				cont--;
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 		}
-		if (client.isOnFire())
-			startGame();
+		startGame();
     }
 
     @FXML
