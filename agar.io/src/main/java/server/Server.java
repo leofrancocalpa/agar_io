@@ -11,6 +11,7 @@ import javax.net.ssl.SSLServerSocket;
 import javax.net.ssl.SSLServerSocketFactory;
 import javax.net.ssl.SSLSocket;
 
+import game.Match;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -26,7 +27,8 @@ public class Server extends Application {
 	private static HashMap<Integer, SSLConnection> threads = new HashMap<Integer, SSLConnection>();
 //	private static ThreadGroup threadsGroup = new ThreadGroup("threadsGroup");
 	private static HashMap<String, User> users = new HashMap<String, User>();
-
+	private static Match match;
+	
 	public void startSSL() {
 		final SSLServerSocketFactory ssf = (SSLServerSocketFactory) SSLServerSocketFactory.getDefault();
 		System.setProperty("javax.net.ssl.keyStore", KEYSTORE_LOCATION);
@@ -97,15 +99,16 @@ public class Server extends Application {
 			threads.get(hashC).writeSessionStatus(SSLConnection.STARTING_MATCH);
 	}
 
-	public static void sendStateFromGame(int hash, String[] arregloS) {
-		// TODO Auto-generated method stub
-
+	public static String getStateFromGame() {
+		String gameStatus = match.getPlayersFromGame().toString();
+		gameStatus += match.getFoodFromGame().toString();
+		return gameStatus;
 	}
 
-	public static void receivePlayerInfo(String line) {
-		String[] playerData = line.split(" ");
+	public static void setGamePositions(String[] playersInfo) {
+		match.setGameStatus(playersInfo);
 	}
-
+	
 	@Override
 	public void start(Stage primaryStage) {
 		try {
@@ -123,9 +126,5 @@ public class Server extends Application {
 
 	public static void main(String[] args) {
 		launch(args);
-	}
-
-	public static void setGamePositions() {
-		
 	}
 }

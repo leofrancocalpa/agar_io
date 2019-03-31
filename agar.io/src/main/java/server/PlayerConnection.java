@@ -23,16 +23,20 @@ public class PlayerConnection extends Thread {
 
 	public void run() {
 		try {
+			String[] playersInfo = new String[clients.size()];
 			while (true) {
 				for (int i = 0; i < clients.size(); i++) {
 					readerC.add(new BufferedReader(new InputStreamReader(clients.get(i).getInputStream())));
 					String line = "";
 					line = readerC.get(i).readLine();
 					System.out.println(line);
-					Server.receivePlayerInfo(line);
+					playersInfo[i] = line;
 				}
-				Server.setGamePositions();
-				
+				Server.setGamePositions(playersInfo);
+				for (int i = 0; i < clients.size(); i++) {
+					writerC.get(i).println(Server.getStateFromGame());
+				}
+				sleep(60);
 			}
 
 //			readerC.get(i).close();
@@ -40,6 +44,9 @@ public class PlayerConnection extends Thread {
 			System.out.println("One user has left");
 		} catch (IOException e1) {
 			e1.printStackTrace();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 

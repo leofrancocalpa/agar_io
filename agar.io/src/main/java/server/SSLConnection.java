@@ -58,9 +58,6 @@ public class SSLConnection extends Thread {
 			Server.registerNewUser(hash, arregloS);
 		else if (arregloS.length == 2)
 			Server.playGameOf(hash, arregloS);
-		else {
-			Server.sendStateFromGame(hash, arregloS);
-		}
 	}
 
 	public void writeSessionStatus(String line) {
