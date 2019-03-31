@@ -85,8 +85,8 @@ public class Match
 		
 		for(String data : players) {
 			String[] info = data.split(",");
-			int x = Integer.parseInt(info[0]);
-			int y = Integer.parseInt(info[1]);
+			int x = (int) Double.parseDouble(info[0]);
+			int y = (int) Double.parseDouble(info[1]);
 			Ball ball = this.players.get(info[4]);
 			ball.setPosition(x, y);
 			if(info[5].equals("T")) ball.setAlive(true);
