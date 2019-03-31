@@ -155,7 +155,7 @@ public class Match
 	 * @return Array of strings that represent the position x,y and mass (width and height) of every player in the game
 	 * Example : player[0] -> {x,y,w,h,id,T/F,R,G,B}
 	 */
-	public String[] getPlayerFromGame() {
+	public String[] getPlayersFromGame() {
 		String[] balls = new String[this.players.size()];
 		int i=0;
 		for(Map.Entry<String, Ball> element : players.entrySet()) {
