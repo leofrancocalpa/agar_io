@@ -17,6 +17,7 @@ public class Sprite {
 	public double velocityY;
 	private double width;
 	private double height;
+	private boolean live;
 	public Color color;
 
 	public Sprite(String id) {
@@ -25,8 +26,25 @@ public class Sprite {
 		positionY = 0;
 		velocityX = 5;
 		velocityY = 5;
+		live=true;
 	}
-
+	
+	public boolean getLive() {
+		return live;
+	}
+	
+	public String getId() {
+		return id;
+	}
+	
+	public void setLive(String isLive) {
+		if(isLive.equals("T")) {
+			live=true;
+		}
+		else {
+			live=false;
+		}
+	}
 	public void setMass(double width, double height) {
 		this.width += width;
 		this.height += height;
@@ -71,6 +89,11 @@ public class Sprite {
 	public void update(double time) {
 		positionX += velocityX * time;
 		positionY += velocityY * time;
+	}
+	
+	public void setColor(double R, double G, double B, double opacity) {
+		Color color = new Color(R,G,B,opacity);
+		this.color=color;
 	}
 
 	public void render(GraphicsContext gc) {

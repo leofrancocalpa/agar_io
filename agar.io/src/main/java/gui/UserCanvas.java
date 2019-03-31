@@ -36,27 +36,32 @@ public class UserCanvas extends AnchorPane {
 		drawShapes(gc, user);
 		
 		// Clear away portions as the user drags the mouse
-		canvas.setOnMouseEntered(new EventHandler<MouseEvent>() {
-			public void handle(MouseEvent e) {
-				
-
-			}
-		});
+//		canvas.setOnMouseEntered(new EventHandler<MouseEvent>() {
+//			public void handle(MouseEvent e) {
+//				
+//
+//			}
+//		});
 
 	}
 
 	private void drawShapes(final GraphicsContext gc, final Client user) {
-
+		// infoPlayer = {x,y,w,h,id,T/F,R,G,B}  is the same for enemies and food
 		final String[] infoPlayer = user.getInfoPlayer();
 		int user_x = Integer.parseInt(infoPlayer[0]);
 		int user_y = Integer.parseInt(infoPlayer[1]);
 		double user_w = Double.parseDouble(infoPlayer[2]);
 		double user_h = Double.parseDouble(infoPlayer[3]);
 		final String user_id = infoPlayer[4];
+		double R = Double.parseDouble(infoPlayer[6]);
+		double G = Double.parseDouble(infoPlayer[7]);
+		double B = Double.parseDouble(infoPlayer[8]);
 
 		final Sprite player = new Sprite(user_id);
 		player.setPosition(user_x, user_y);
 		player.setMass(user_w, user_h);
+		player.setLive(infoPlayer[5]);
+		player.setColor(R, G, B, 1);
 		player.render(gc);
 
 		Timeline gameLoop = new Timeline();
@@ -68,30 +73,46 @@ public class UserCanvas extends AnchorPane {
 						String[] players = user.getPlayersFromGame();
 						for (String info : players) {
 							String[] infoPlayer = info.split(",");
-							int user_x = Integer.parseInt(infoPlayer[0]);
-							int user_y = Integer.parseInt(infoPlayer[1]);
-							double user_w = Double.parseDouble(infoPlayer[2]);
-							double user_h = Double.parseDouble(infoPlayer[3]);
-							String user_id = infoPlayer[4];
-
-							final Sprite player = new Sprite(user_id);
-							player.setPosition(user_x, user_y);
-							player.setMass(user_w, user_h);
-							player.render(gc);
+							if(infoPlayer[5].equals("T")) {
+								int user_x = Integer.parseInt(infoPlayer[0]);
+								int user_y = Integer.parseInt(infoPlayer[1]);
+								double user_w = Double.parseDouble(infoPlayer[2]);
+								double user_h = Double.parseDouble(infoPlayer[3]);
+								String user_id = infoPlayer[4];
+								double R = Double.parseDouble(infoPlayer[6]);
+								double G = Double.parseDouble(infoPlayer[7]);
+								double B = Double.parseDouble(infoPlayer[8]);
+								final Sprite player = new Sprite(user_id);
+								player.setPosition(user_x, user_y);
+								player.setMass(user_w, user_h);
+								player.setLive(infoPlayer[5]);
+								player.setColor(R, G, B, 1);
+								player.render(gc);
+							}
+							
 						}
 
 						String[] food = user.getFoodFromGame();
 						for (String info : food) {
 							String[] infoFood = info.split(",");
-							int food_x = Integer.parseInt(infoFood[0]);
-							int food_y = Integer.parseInt(infoFood[1]);
-							double food_w = Double.parseDouble(infoFood[2]);
-							double food_h = Double.parseDouble(infoFood[3]);
+							if(infoFood[5].equals("T")) {
+								int food_x = Integer.parseInt(infoFood[0]);
+								int food_y = Integer.parseInt(infoFood[1]);
+								double food_w = Double.parseDouble(infoFood[2]);
+								double food_h = Double.parseDouble(infoFood[3]);
+								
+								double R = Double.parseDouble(infoFood[6]);
+								double G = Double.parseDouble(infoFood[7]);
+								double B = Double.parseDouble(infoFood[8]);
 
-							final Sprite aFood = new Sprite(Sprite.FOOD);
-							aFood.setPosition(food_x, food_y);
-							aFood.setMass(food_w, food_h);
-							aFood.render(gc);
+								final Sprite aFood = new Sprite(infoFood[4]);
+								aFood.setPosition(food_x, food_y);
+								aFood.setMass(food_w, food_h);
+								aFood.setLive("T");
+								aFood.setColor(R, G, B, 1);
+								aFood.render(gc);
+							}
+							
 						}
 
 						Point xy = MouseInfo.getPointerInfo().getLocation();
@@ -105,8 +126,8 @@ public class UserCanvas extends AnchorPane {
 						player.changePosition(nx, ny);
 
 						player.render(gc);
-						String[] state = { player.x() + "", player.y() + "", player.width() + "",
-								player.height() + "", user_id, infoPlayer[5] };
+						String state = player.x()+","+ player.y()+ ","+ player.width() + ","+
+								player.height() + "," +player.getId()+"T";
 						user.updatePlayer(state);
 					}
 				});
