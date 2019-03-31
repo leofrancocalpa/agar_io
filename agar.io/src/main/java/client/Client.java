@@ -210,7 +210,7 @@ public class Client extends Application{
 	 * 
 	 * @param state position x,y and mass that is represented by a ball
 	 */
-	public void updatePlayer(String[] state) {
+	public void updatePlayer(String state) {
 		player = state;
 	}
 	
