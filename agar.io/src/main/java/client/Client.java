@@ -33,9 +33,12 @@ public class Client extends Application{
 	private int posPlayer;
 	private String nickName;
 	private String[] enemies;
-	private String[] player;
+	private String player;
 	private String[] food;
 	
+	public String getNickName() {
+		return nickName;
+	}
 	@Override
 	public void start(final Stage primaryStage) {
 		try {
@@ -145,7 +148,7 @@ public class Client extends Application{
 					System.out.println(infoGame);
 					if(!infoGame.startsWith(PlayerConnection.STARTING_MATCH)) {
 						updateGame(infoGame);
-						sendToServer(setFormatToCommas(getInfoPlayer()));
+						sendToServer(getInfoPlayer());
 					}
 					else {
 						posPlayer = Integer.parseInt(infoGame.substring(infoGame.length()-1));
@@ -163,14 +166,14 @@ public class Client extends Application{
 			}
 		}
 
-		private String setFormatToCommas(String[] infoPlayer) {
-			StringBuilder sb = new StringBuilder();
-			for (int i = 0; i < infoPlayer.length; i++) {
-				sb.append(infoPlayer[i] + ",");
-			}
-			System.out.println(sb.toString());
-			return sb.toString();
-		}
+//		private String setFormatToCommas(String[] infoPlayer) {
+//			StringBuilder sb = new StringBuilder();
+//			for (int i = 0; i < infoPlayer.length; i++) {
+//				sb.append(infoPlayer[i] + ",");
+//			}
+//			System.out.println(sb.toString());
+//			return sb.toString();
+//		}
 	});
 			
 	tServer.start();
@@ -203,7 +206,7 @@ public class Client extends Application{
 	 * (width and height) and id
 	 * infoPlayer[0]-> x , infoPlayer[1]-> y, infoPlayer[2]-> w, infoPlayer[3]-> h, infoPlayer[4]-> id
 	 */
-	public String[] getInfoPlayer() {
+	public String getInfoPlayer() {
 		return player;
 	}
 	/**
@@ -219,7 +222,7 @@ public class Client extends Application{
 		enemies = arreglos[0].split(" ");
 		food = arreglos[1].split(" ");
 		if(player == null)
-			player = enemies[posPlayer].split(",");
+			player = enemies[posPlayer];
 	}
 	
 	public int getStatus() {

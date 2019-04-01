@@ -47,12 +47,12 @@ public class UserCanvas extends AnchorPane {
 
 	private void drawShapes(final GraphicsContext gc, final Client user) {
 		// infoPlayer = {x,y,w,h,id,T/F,R,G,B}  is the same for enemies and food
-		final String[] infoPlayer = user.getInfoPlayer();
+		final String[] infoPlayer = user.getInfoPlayer().split(",");
 		int user_x = Integer.parseInt(infoPlayer[0]);
 		int user_y = Integer.parseInt(infoPlayer[1]);
 		double user_w = Double.parseDouble(infoPlayer[2]);
 		double user_h = Double.parseDouble(infoPlayer[3]);
-		final String user_id = infoPlayer[4];
+		final String user_id = user.getNickName();
 		double R = Double.parseDouble(infoPlayer[6]);
 		double G = Double.parseDouble(infoPlayer[7]);
 		double B = Double.parseDouble(infoPlayer[8]);
