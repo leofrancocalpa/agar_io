@@ -13,7 +13,7 @@ import javafx.scene.paint.Color;
 
 public class Match 
 {
-	public static final int FOOD_NUM_MAX=100;
+	public static final int FOOD_NUM_MAX=40;
 	public static final int FOOD_WIDTH=20;
 	public static final int FOOD_HEIGHT=20;
 	public static final int PLAYER_MIN_SIZE=30;
@@ -72,16 +72,6 @@ public class Match
 	 * @param players {x,y,w,h,id,T/F}
 	 */
 	public void updateGame( String[] players) {
-		//update position and mass of players and food
-//		for(String data : food) {
-//			String[] info = data.split(",");
-//			int x = Integer.parseInt(info[0]);
-//			int y = Integer.parseInt(info[1]);
-//			Ball ball = this.food.get(info[4]);
-//			ball.setPosition(x, y);
-//			if(info[5].equals("T")) ball.setAlive(true);
-//			if(info[5].equals("F")) ball.setAlive(false);
-//		}
 		
 		for(String data : players) {
 			String[] info = data.split(",");
@@ -98,31 +88,39 @@ public class Match
 	
 	public void iterationInGame() {
 		//Detect intersections and collitions between balls
-		@SuppressWarnings("unchecked")
-		HashMap<String, Ball> hm = (HashMap<String, Ball>) players.clone();
-		compareIntersections(hm);
-	}
-	
-	
-	
-	public void compareIntersections(HashMap<String, Ball> hm) {
-		if(hm.size()<2) {
-			//do nothing
-		}
-		else {
-			Iterator<Map.Entry<String, Ball>> iterator = hm.entrySet().iterator();
-			Map.Entry<String, Ball> map = iterator.next();
-			while(iterator.hasNext()) {
+//		@SuppressWarnings("unchecked")
+//		HashMap<String, Ball> hm = (HashMap<String, Ball>) players.putAll(food);
+//		compareIntersections(food);
+//	}
+//	
+//	public void compareIntersections(HashMap<String, Ball> food) {
+//		if(food.size()<2) {
+//			//do nothing
+//		}
+//		else {
+			Iterator<Map.Entry<String, Ball>> iterator = players.entrySet().iterator();
+			while (iterator.hasNext()) {
+				Map.Entry<java.lang.String, game.Ball> map = (Map.Entry<java.lang.String, game.Ball>) iterator.next();
+				Iterator<Map.Entry<String, Ball>> itFood = food.entrySet().iterator();
 				if(players.get(map.getKey()).getIsAlive()==false) {
 					break;
 				}
-				Map.Entry<String, Ball> compare = iterator.next();
-				if(players.get(map.getKey()).intersects(players.get(compare.getKey()))) {
-					fight(players.get(map.getKey()), players.get(compare.getKey()));
+			while(itFood.hasNext()) {
+				Map.Entry<java.lang.String, game.Ball> mapFood = (Map.Entry<java.lang.String, game.Ball>) itFood.next();
+				if(food.get(mapFood.getKey()).intersects(players.get(map.getKey()))) {
+					fight(food.get(mapFood.getKey()), players.get(map.getKey()));
 				}
 			}
-			hm.remove(map.getKey(), map.getValue());
-			compareIntersections(hm);
+			Iterator<Map.Entry<String, Ball>> itEnemy = players.entrySet().iterator();
+			while (itEnemy.hasNext()) {
+				Map.Entry<java.lang.String, game.Ball> mapE = (Map.Entry<java.lang.String, game.Ball>) iterator.next();
+				if(players.get(mapE.getKey()).intersects(players.get(map.getKey())) && !players.get(mapE.getKey()).equals(players.get(map.getKey()))) {
+					fight(players.get(mapE.getKey()), players.get(map.getKey()));
+				}
+			}
+//			}
+//			hm.remove(map.getKey(), map.getValue());
+//			compareIntersections(hm);
 		}
 		
 	}

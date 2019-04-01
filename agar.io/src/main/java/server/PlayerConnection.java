@@ -24,7 +24,7 @@ public class PlayerConnection extends Thread {
 
 	public void run() {
 		try {
-			System.out.println("corre partida");
+			System.out.println(clients.size() + " clientes conectados");
 			String[] playersInfo = new String[clients.size()];
 			for (int i = 0; i < clients.size(); i++) {
 				String line = readerC.get(i).readLine();
@@ -42,13 +42,13 @@ public class PlayerConnection extends Thread {
 					String line = readerC.get(i).readLine();
 					playersInfo[i] = line;
 				}
-				System.out.println(playersInfo[0]);
 				Server.setGamePositions(playersInfo);
 				stateFromGame = Server.getStateFromGame();
+//				System.out.println(stateFromGame);
 				for (int i = 0; i < clients.size(); i++) {
 					writerC.get(i).println(stateFromGame);
 				}
-				sleep(1000);
+				sleep(36);
 			}
 
 //			readerC.get(i).close();

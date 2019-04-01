@@ -145,7 +145,7 @@ public class Client extends Application{
 				System.out.println("Se conecta al juego");
 				while (client.isConnected()) {
 					final String infoGame = readerC.readLine();
-					System.out.println(infoGame);
+//					System.out.println(infoGame);
 					if(!infoGame.startsWith(PlayerConnection.STARTING_MATCH)) {
 						updateGame(infoGame);
 						sendToServer(getInfoPlayer());
@@ -207,7 +207,7 @@ public class Client extends Application{
 	 * infoPlayer[0]-> x , infoPlayer[1]-> y, infoPlayer[2]-> w, infoPlayer[3]-> h, infoPlayer[4]-> id
 	 */
 	public String getInfoPlayer() {
-		System.out.println(player);
+//		System.out.println(player);
 		return player;
 	}
 	/**

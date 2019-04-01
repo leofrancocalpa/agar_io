@@ -133,13 +133,6 @@ public class Server extends Application {
 			Scene scene = new Scene(root);
 			primaryStage.setScene(scene);
 			primaryStage.show();
-			primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-				
-				public void handle(WindowEvent event) {
-					// TODO Auto-generated method stub
-					primaryStage.close();
-				}
-			});
 			serverSt = loader.getController();
 			serverSt.putServer(this);
 		} catch (Exception e) {
