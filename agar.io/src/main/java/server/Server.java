@@ -35,10 +35,13 @@ public class Server extends Application {
 	private InetAddress ip;
 	
 	public void startSSL() {
-
+		
+		System.setProperty("javax.net.ssl.trustStore", "src/main/resources/server/serverTrustedCerts.jks");
+		System.setProperty("javax.net.ssl.trustStorePassword", "123456");
+		System.setProperty("javax.net.ssl.keyStore", "src/main/resources/server/serverkey.jks");
+		System.setProperty("javax.net.ssl.keyStorePassword", "123456");
 		final SSLServerSocketFactory ssf = (SSLServerSocketFactory) SSLServerSocketFactory.getDefault();
-		System.setProperty("javax.net.ssl.keyStore", KEYSTORE_LOCATION);
-		System.setProperty("javax.net.ssl.keyStorePassword", KEYSTORE_PASSWORD);
+		
 		Thread condenser = new Thread(new Runnable() {
 
 			public void run() {
