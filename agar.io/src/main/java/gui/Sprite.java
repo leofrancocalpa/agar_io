@@ -46,8 +46,8 @@ public class Sprite {
 		}
 	}
 	public void setMass(double width, double height) {
-		this.width += width;
-		this.height += height;
+		this.width = width;
+		this.height = height;
 	}
 
 	public void setPosition(double x, double y) {
@@ -98,7 +98,7 @@ public class Sprite {
 	
 	public void render(GraphicsContext gc) {
 		gc.setFill(color);
-		gc.fillOval(positionX, positionY, width, height);
+		gc.fillOval(positionX-(width/2), positionY-(height/2), width, height);
 	}
 
 	public Rectangle2D getBoundary() {

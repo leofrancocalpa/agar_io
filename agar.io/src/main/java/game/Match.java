@@ -79,8 +79,6 @@ public class Match
 			int y = (int) Double.parseDouble(info[1]);
 			Ball ball = this.players.get(info[4]);
 			ball.setPosition(x, y);
-			if(info[5].equals("T")) ball.setAlive(true);
-			if(info[5].equals("F")) ball.setAlive(false);
 		}
 		
 		iterationInGame();
@@ -108,13 +106,15 @@ public class Match
 			while(itFood.hasNext()) {
 				Map.Entry<java.lang.String, game.Ball> mapFood = (Map.Entry<java.lang.String, game.Ball>) itFood.next();
 				if(food.get(mapFood.getKey()).intersects(players.get(map.getKey()))) {
+					if(food.get(mapFood.getKey()).getIsAlive())
 					fight(food.get(mapFood.getKey()), players.get(map.getKey()));
 				}
 			}
 			Iterator<Map.Entry<String, Ball>> itEnemy = players.entrySet().iterator();
 			while (itEnemy.hasNext()) {
-				Map.Entry<java.lang.String, game.Ball> mapE = (Map.Entry<java.lang.String, game.Ball>) iterator.next();
+				Map.Entry<java.lang.String, game.Ball> mapE = (Map.Entry<java.lang.String, game.Ball>) itEnemy.next();
 				if(players.get(mapE.getKey()).intersects(players.get(map.getKey())) && !players.get(mapE.getKey()).equals(players.get(map.getKey()))) {
+					if(players.get(mapE.getKey()).getIsAlive())
 					fight(players.get(mapE.getKey()), players.get(map.getKey()));
 				}
 			}
@@ -129,10 +129,12 @@ public class Match
 		if(b1.width()>b2.width()) {
 			b1.setMass(b2.width(), b2.width());
 			b2.setAlive(false);
+			System.out.println(b1.width());
 		}
 		if(b1.width()<b2.width()) {
 			b2.setMass(b1.width(), b1.width());
 			b1.setAlive(false);
+			System.out.println(b2.width());
 		}
 	}
  

@@ -47,23 +47,17 @@ public class UserCanvas extends AnchorPane {
 
 	private void drawShapes(final GraphicsContext gc) {
 		// infoPlayer = {x,y,w,h,id,T/F,R,G,B}  is the same for enemies and food
-		final String[] infoPlayer = user.getInfoPlayer().split(",");
-		int user_x = Integer.parseInt(infoPlayer[0]);
-		int user_y = Integer.parseInt(infoPlayer[1]);
-		double user_w = Double.parseDouble(infoPlayer[2]);
-		double user_h = Double.parseDouble(infoPlayer[3]);
+		final String[]infoPlayer = user.getInfoPlayer().split(",");
+		int user_x = (int) Double.parseDouble(infoPlayer[0]);
+		int user_y = (int) Double.parseDouble(infoPlayer[1]);
 		final String user_id = user.getNickName();
 		final double R = Double.parseDouble(infoPlayer[6]);
 		final double G = Double.parseDouble(infoPlayer[7]);
 		final double B = Double.parseDouble(infoPlayer[8]);
-
 		final Sprite player = new Sprite(user_id);
 		player.setPosition(user_x, user_y);
-		player.setMass(user_w, user_h);
-		player.setLive(infoPlayer[5]);
 		player.setColor(R, G, B, 1);
-		player.render(gc);
-
+		
 		Timeline gameLoop = new Timeline();
 		gameLoop.setCycleCount(Timeline.INDEFINITE);
 		KeyFrame kf = new KeyFrame(Duration.seconds(0.04), // 0.017 -> 60 FPS
@@ -114,7 +108,13 @@ public class UserCanvas extends AnchorPane {
 							}
 							
 						}
-
+						String[] infoPlayer = user.getInfoPlayer().split(",");
+						double user_w = Double.parseDouble(infoPlayer[2]);
+						double user_h = Double.parseDouble(infoPlayer[3]);
+						
+						player.setLive(infoPlayer[5]);
+						
+						if(player.getLive()) {
 						Point xy = MouseInfo.getPointerInfo().getLocation();
 						double dx = xy.getX() - player.x();
 						double dy = xy.getY() - player.y();
@@ -124,11 +124,31 @@ public class UserCanvas extends AnchorPane {
 						int nx = (int) (player.velocityX * Math.cos(theta));
 						int ny = (int) (player.velocityY * Math.sin(theta));
 						player.changePosition(nx, ny);
-
+						player.setMass(user_w, user_h);
 						player.render(gc);
-						String state = player.x()+","+ player.y()+ ","+ player.width() + ","+
-						player.height() + "," +user.getNickName()+",T,"+ R +"," + G + ","+ B;
-						user.updatePlayer(state);
+						StringBuilder state = new StringBuilder();
+						state.append(player.x());
+						state.append(",");
+						state.append(player.y());
+						state.append(",");
+						state.append(player.width());
+						state.append(",");
+						state.append(player.height());
+						state.append(",");
+						state.append(user.getNickName());
+						state.append(",");
+						if(player.getLive())
+						state.append("T");
+						else
+							state.append("F");
+						state.append(",");
+						state.append(R);
+						state.append(",");
+						state.append(G);
+						state.append(",");
+						state.append(B);
+						user.updatePlayer(state.toString());
+						}
 					}
 				});
 		gameLoop.getKeyFrames().add(kf);

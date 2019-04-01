@@ -207,7 +207,7 @@ public class Client extends Application{
 	 * infoPlayer[0]-> x , infoPlayer[1]-> y, infoPlayer[2]-> w, infoPlayer[3]-> h, infoPlayer[4]-> id
 	 */
 	public String getInfoPlayer() {
-//		System.out.println(player);
+		System.out.println(player);
 		return player;
 	}
 	/**
@@ -227,6 +227,16 @@ public class Client extends Application{
 		food = arreglos[1].split(" ");
 		if(player == null)
 			player = enemies[posPlayer];
+		else {
+			String[]oldP = player.split(",");
+			String[]newP = enemies[posPlayer].split(",");
+			StringBuilder sbP = new StringBuilder(oldP[0] +"," + oldP[1]);
+			for (int i = 2; i < newP.length; i++) {
+				sbP.append(",");
+				sbP.append(newP[i]);
+			}
+			player = sbP.toString();
+		}
 	}
 	
 	public int getStatus() {
