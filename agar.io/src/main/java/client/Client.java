@@ -207,6 +207,7 @@ public class Client extends Application{
 	 * infoPlayer[0]-> x , infoPlayer[1]-> y, infoPlayer[2]-> w, infoPlayer[3]-> h, infoPlayer[4]-> id
 	 */
 	public String getInfoPlayer() {
+		System.out.println(player);
 		return player;
 	}
 	/**
@@ -217,6 +218,9 @@ public class Client extends Application{
 		player = state;
 	}
 	
+	public int getPosPlayer() {
+		return posPlayer;
+	}
 	public void updateGame(String entry) {
 		String[] arreglos = entry.split("/");
 		enemies = arreglos[0].split(" ");

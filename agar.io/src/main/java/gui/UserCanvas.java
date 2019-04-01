@@ -33,7 +33,7 @@ public class UserCanvas extends AnchorPane {
 		final GraphicsContext gc = canvas.getGraphicsContext2D();
 		this.getChildren().add(canvas);
 
-		drawShapes(gc, user);
+		drawShapes(gc);
 		
 		// Clear away portions as the user drags the mouse
 //		canvas.setOnMouseEntered(new EventHandler<MouseEvent>() {
@@ -45,7 +45,7 @@ public class UserCanvas extends AnchorPane {
 
 	}
 
-	private void drawShapes(final GraphicsContext gc, final Client user) {
+	private void drawShapes(final GraphicsContext gc) {
 		// infoPlayer = {x,y,w,h,id,T/F,R,G,B}  is the same for enemies and food
 		final String[] infoPlayer = user.getInfoPlayer().split(",");
 		int user_x = Integer.parseInt(infoPlayer[0]);
@@ -53,9 +53,9 @@ public class UserCanvas extends AnchorPane {
 		double user_w = Double.parseDouble(infoPlayer[2]);
 		double user_h = Double.parseDouble(infoPlayer[3]);
 		final String user_id = user.getNickName();
-		double R = Double.parseDouble(infoPlayer[6]);
-		double G = Double.parseDouble(infoPlayer[7]);
-		double B = Double.parseDouble(infoPlayer[8]);
+		final double R = Double.parseDouble(infoPlayer[6]);
+		final double G = Double.parseDouble(infoPlayer[7]);
+		final double B = Double.parseDouble(infoPlayer[8]);
 
 		final Sprite player = new Sprite(user_id);
 		player.setPosition(user_x, user_y);
@@ -71,9 +71,9 @@ public class UserCanvas extends AnchorPane {
 					public void handle(ActionEvent ae) {
 						gc.clearRect(0, 0, 1024, 680);
 						String[] players = user.getPlayersFromGame();
-						for (String info : players) {
-							String[] infoPlayer = info.split(",");
-							if(infoPlayer[5].equals("T")) {
+						for (int i = 0; i < players.length; i++) {
+							String[] infoPlayer = players[i].split(",");
+							if(infoPlayer[5].equals("T") && user.getPosPlayer() != i) {
 								int user_x = Integer.parseInt(infoPlayer[0]);
 								int user_y = Integer.parseInt(infoPlayer[1]);
 								double user_w = Double.parseDouble(infoPlayer[2]);
@@ -127,7 +127,7 @@ public class UserCanvas extends AnchorPane {
 
 						player.render(gc);
 						String state = player.x()+","+ player.y()+ ","+ player.width() + ","+
-								player.height() + "," +player.getId()+"T";
+						player.height() + "," +user.getNickName()+",T,"+ R +"," + G + ","+ B;
 						user.updatePlayer(state);
 					}
 				});

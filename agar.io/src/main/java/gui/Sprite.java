@@ -95,7 +95,7 @@ public class Sprite {
 		Color color = new Color(R,G,B,opacity);
 		this.color=color;
 	}
-
+	
 	public void render(GraphicsContext gc) {
 		gc.setFill(color);
 		gc.fillOval(positionX, positionY, width, height);
