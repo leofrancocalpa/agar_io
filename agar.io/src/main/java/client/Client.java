@@ -87,7 +87,7 @@ public class Client extends Application{
 				SSLSocketFactory sf = (SSLSocketFactory) SSLSocketFactory.getDefault();
 				
 				try {
-					client = (SSLSocket) sf.createSocket("Voyager", 8030);
+					client = (SSLSocket) sf.createSocket("DESPAIR", 8030);
 					String[] supported = client.getSupportedCipherSuites();
 					client.setEnabledCipherSuites(supported);
 					writerC = new PrintWriter(client.getOutputStream(), true);
@@ -132,7 +132,7 @@ public class Client extends Application{
 		SocketFactory sf = SocketFactory.getDefault();
 		
 		try {
-			client = sf.createSocket("Voyager", 8040);
+			client = sf.createSocket("DESPAIR", 8040);
 			writerC = new PrintWriter(client.getOutputStream(), true);
 			writerC.println(nickName);
 			
@@ -207,7 +207,7 @@ public class Client extends Application{
 	 * infoPlayer[0]-> x , infoPlayer[1]-> y, infoPlayer[2]-> w, infoPlayer[3]-> h, infoPlayer[4]-> id
 	 */
 	public String getInfoPlayer() {
-		System.out.println(player);
+//		System.out.println(player);
 		return player;
 	}
 	/**

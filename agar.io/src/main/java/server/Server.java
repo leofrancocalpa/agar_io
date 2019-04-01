@@ -73,10 +73,10 @@ public class Server extends Application {
 		PlayerConnection matchPlayer = new PlayerConnection();
 			try {
 				ServerSocket server = ssf.createServerSocket(8040);
-//				while (matchPlayer.clientsCount() < 2) {
+				while (matchPlayer.clientsCount() < 2) {
 				Socket c = server.accept();
 				matchPlayer.addSocket(c);
-//				}
+				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

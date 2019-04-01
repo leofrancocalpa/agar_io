@@ -39,8 +39,8 @@ public class Ball {
 	}
 	
 	public void setMass(double width, double height) {
-		this.width += width;
-		this.height += height;
+		this.width += (width/2);
+		this.height += (height/2);
 	}
 
 	public void setPosition(int x, int y) {
