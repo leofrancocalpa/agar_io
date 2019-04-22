@@ -24,6 +24,8 @@ public class Match
 	HashMap<String, Ball> players;
 	private int game_field_size_x;
 	private int game_field_size_y;
+	private boolean timeOut;
+	private boolean inGame;
 	
 	public Match() {
 		//food = new ArrayList<Ball>();
@@ -32,6 +34,8 @@ public class Match
 		players = new HashMap<String, Ball>();
 		this.game_field_size_x=1024;
 		this.game_field_size_y=680;
+		timeOut = false;
+		inGame = false;
 	}
 	
 	public void initialize(ArrayList<String> playersFromServer) {
@@ -166,6 +170,15 @@ public class Match
 		}
 		
 		return balls;
+	}
+
+	public boolean isTimeOut() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public void timeOut() {
+		timeOut = true;
 	}
 		
 }

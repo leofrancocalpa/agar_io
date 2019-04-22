@@ -83,14 +83,14 @@ public class Client extends Application{
 
 	public void connectToServer() {
 				final SSLSocket client;
-				System.setProperty("javax.net.ssl.trustStore", "src/main/resources/client/clientTrustedCerts.jks");
+				System.setProperty("javax.net.ssl.trustStore", "agar.io/src/main/resources/client/clientTrustedCerts.jks");
 				System.setProperty("javax.net.ssl.trustStorePassword", "123456");
-				System.setProperty("javax.net.ssl.keyStore", "src/main/resources/client/clientkey.jks");
+				System.setProperty("javax.net.ssl.keyStore", "agar.io/src/main/resources/client/clientkey.jks");
 				System.setProperty("javax.net.ssl.keyStorePassword", "123456");
 				SSLSocketFactory sf = (SSLSocketFactory) SSLSocketFactory.getDefault();
 				
 				try {
-					client = (SSLSocket) sf.createSocket("DESPAIR", 8030);
+					client = (SSLSocket) sf.createSocket("localhost", 8030);
 					String[] supported = client.getSupportedCipherSuites();
 					client.setEnabledCipherSuites(supported);
 					writerC = new PrintWriter(client.getOutputStream(), true);
@@ -135,7 +135,7 @@ public class Client extends Application{
 		SocketFactory sf = SocketFactory.getDefault();
 		
 		try {
-			client = sf.createSocket("DESPAIR", 8040);
+			client = sf.createSocket("localhost", 8040);
 			writerC = new PrintWriter(client.getOutputStream(), true);
 			writerC.println(nickName);
 			

@@ -1,5 +1,10 @@
 package server;
 
+import java.sql.Time;
+import java.util.Timer;
+import java.util.TimerTask;
+
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -19,8 +24,11 @@ public class ServerStController {
 	private TitledPane usersTitledPane;
 
 	@FXML
-	private Label time;
-
+	private Label minutes;
+	
+	@FXML
+	private Label seconds;
+	
 	@FXML
 	private Label title;
 
@@ -34,8 +42,48 @@ public class ServerStController {
 
 	@FXML
 	void startServer (ActionEvent event) {
-		server.startSSL();
-		server.startMatchConnection();
+		Thread receptPlayers = new Thread(new Runnable() {
+			
+			public void run() {
+				server.startSSL();
+				server.startMatchConnection();
+				
+			}
+		});
+		receptPlayers.start();
+		new Thread(new Runnable() {
+			int min = Integer.parseInt(minutes.getText());
+			int sec = Integer.parseInt(seconds.getText());
+			
+			public void run() {
+				while(true){
+					 Platform.runLater(new Runnable() {
+				            public void run() {
+				            	if(sec==00){
+									if(min==00)
+										//cerrar ciclo
+										;
+									minutes.setText(min--+"");
+									seconds.setText(60+"");
+								} else {
+									seconds.setText(sec--+"");
+								}
+				            }
+				        });
+					
+					try {
+						
+						System.out.println("no cambia la pantalla");
+						Thread.sleep(1000);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+		}
+			}
+		});
+
+		System.out.println("pasa por aquí");
+		server.timeOut();
 	}
 	
 	void putServer(Server server) {

@@ -36,9 +36,9 @@ public class Server extends Application {
 	
 	public void startSSL() {
 		
-		System.setProperty("javax.net.ssl.trustStore", "src/main/resources/server/serverTrustedCerts.jks");
+		System.setProperty("javax.net.ssl.trustStore", "agar.io/src/main/resources/server/serverTrustedCerts.jks");
 		System.setProperty("javax.net.ssl.trustStorePassword", "123456");
-		System.setProperty("javax.net.ssl.keyStore", "src/main/resources/server/serverkey.jks");
+		System.setProperty("javax.net.ssl.keyStore", "agar.io/src/main/resources/server/serverkey.jks");
 		System.setProperty("javax.net.ssl.keyStorePassword", "123456");
 		final SSLServerSocketFactory ssf = (SSLServerSocketFactory) SSLServerSocketFactory.getDefault();
 		
@@ -73,17 +73,18 @@ public class Server extends Application {
 	public void startMatchConnection() {
 		match = new Match();
 		ServerSocketFactory ssf = ServerSocketFactory.getDefault();
-		PlayerConnection matchPlayer = new PlayerConnection();
+		PlayerConnection playerC = new PlayerConnection();
 			try {
 				ServerSocket server = ssf.createServerSocket(8040);
-				while (matchPlayer.clientsCount() < 2) {
+				while (playerC.clientsCount() < 5 && !match.isTimeOut()) {
 				Socket c = server.accept();
-				matchPlayer.addSocket(c);
+				playerC.addSocket(c);
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			matchPlayer.start();
+			if(playerC.clientsCount()>=2)
+			playerC.start();
 	}
 
 	public static void registerNewUser(int hashC, String[] info) {
@@ -153,5 +154,10 @@ public class Server extends Application {
 			players.add(playersInfo[i]);
 		}
 		match.initialize(players);
+	}
+
+	public void timeOut() {
+		match.timeOut();
+		
 	}
 }
