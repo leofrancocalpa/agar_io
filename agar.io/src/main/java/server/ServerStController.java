@@ -42,6 +42,7 @@ public class ServerStController {
 
 	@FXML
 	void startServer (ActionEvent event) {
+		if(butStart.getText().equals("Start Server")) {
 		Thread receptPlayers = new Thread(new Runnable() {
 			
 			public void run() {
@@ -51,39 +52,51 @@ public class ServerStController {
 			}
 		});
 		receptPlayers.start();
+		butStart.setText("Stop Server");
 		new Thread(new Runnable() {
 			int min = Integer.parseInt(minutes.getText());
 			int sec = Integer.parseInt(seconds.getText());
 			
+			@SuppressWarnings("restriction")
 			public void run() {
-				while(true){
+				try {
+				Thread.sleep(1000);
+				while(server.isReceiving()){
 					 Platform.runLater(new Runnable() {
 				            public void run() {
 				            	if(sec==00){
-									if(min==00)
-										//cerrar ciclo
-										;
-									minutes.setText(min--+"");
-									seconds.setText(60+"");
+									if(min==00) {
+										minutes.setText("02");
+										seconds.setText("00");
+										server.timeOut();
+									}
+									else {
+										min--;
+										sec = 59;
+									minutes.setText("0"+min);
+									seconds.setText(sec+"");
+									}
 								} else {
-									seconds.setText(sec--+"");
+									sec--;
+									if(sec<10)
+									seconds.setText("0"+sec);
+									else seconds.setText(sec+"");
 								}
 				            }
 				        });
-					
-					try {
-						
-						System.out.println("no cambia la pantalla");
-						Thread.sleep(1000);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
+					 Thread.sleep(1000);
 		}
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 			}
-		});
-
-		System.out.println("pasa por aquí");
-		server.timeOut();
+		}).start();
+		} else {
+			server.timeOut();
+			minutes.setText("02");
+			seconds.setText("00");
+			butStart.setText("Start Server");
+		}
 	}
 	
 	void putServer(Server server) {

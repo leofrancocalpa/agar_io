@@ -83,9 +83,9 @@ public class Client extends Application{
 
 	public void connectToServer() {
 				final SSLSocket client;
-				System.setProperty("javax.net.ssl.trustStore", "agar.io/src/main/resources/client/clientTrustedCerts.jks");
+				System.setProperty("javax.net.ssl.trustStore", "src/main/resources/client/clientTrustedCerts.jks");
 				System.setProperty("javax.net.ssl.trustStorePassword", "123456");
-				System.setProperty("javax.net.ssl.keyStore", "agar.io/src/main/resources/client/clientkey.jks");
+				System.setProperty("javax.net.ssl.keyStore", "src/main/resources/client/clientkey.jks");
 				System.setProperty("javax.net.ssl.keyStorePassword", "123456");
 				SSLSocketFactory sf = (SSLSocketFactory) SSLSocketFactory.getDefault();
 				

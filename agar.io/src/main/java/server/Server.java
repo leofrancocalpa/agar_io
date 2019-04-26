@@ -12,6 +12,8 @@ import javax.net.ServerSocketFactory;
 import javax.net.ssl.SSLServerSocket;
 import javax.net.ssl.SSLServerSocketFactory;
 import javax.net.ssl.SSLSocket;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 import game.Match;
 import javafx.application.Application;
@@ -31,14 +33,16 @@ public class Server extends Application {
 	private static HashMap<Integer, SSLConnection> threads = new HashMap<Integer, SSLConnection>();
 //	private static ThreadGroup threadsGroup = new ThreadGroup("threadsGroup");
 	private static HashMap<String, User> users = new HashMap<String, User>();
-	private static Match match;
+	private static Match match = new Match();
+	private SSLServerSocket logSocket;
+	private ServerSocket gameSocket;
 	private InetAddress ip;
 	
 	public void startSSL() {
 		
-		System.setProperty("javax.net.ssl.trustStore", "agar.io/src/main/resources/server/serverTrustedCerts.jks");
+		System.setProperty("javax.net.ssl.trustStore", "src/main/resources/server/serverTrustedCerts.jks");
 		System.setProperty("javax.net.ssl.trustStorePassword", "123456");
-		System.setProperty("javax.net.ssl.keyStore", "agar.io/src/main/resources/server/serverkey.jks");
+		System.setProperty("javax.net.ssl.keyStore", "src/main/resources/server/serverkey.jks");
 		System.setProperty("javax.net.ssl.keyStorePassword", "123456");
 		final SSLServerSocketFactory ssf = (SSLServerSocketFactory) SSLServerSocketFactory.getDefault();
 		
@@ -47,6 +51,7 @@ public class Server extends Application {
 			public void run() {
 				try {
 					SSLServerSocket server = (SSLServerSocket) ssf.createServerSocket(8030);
+					logSocket = server;
 					while (true) {
 //						for (Integer tId : threads.keySet()) {
 //							if(!threads.get(tId).isAlive())
@@ -62,7 +67,7 @@ public class Server extends Application {
 //						System.out.println(threads.size());
 					}
 				} catch (IOException e) {
-					e.printStackTrace();
+					System.out.println("Se cierra el login para Clientes");
 				}
 
 			}
@@ -71,20 +76,23 @@ public class Server extends Application {
 	}
 
 	public void startMatchConnection() {
-		match = new Match();
 		ServerSocketFactory ssf = ServerSocketFactory.getDefault();
 		PlayerConnection playerC = new PlayerConnection();
 			try {
 				ServerSocket server = ssf.createServerSocket(8040);
-				while (playerC.clientsCount() < 5 && !match.isTimeOut()) {
+				gameSocket = server;
+				while (playerC.clientsCount() < 5) {
 				Socket c = server.accept();
 				playerC.addSocket(c);
 				}
 			} catch (IOException e) {
-				e.printStackTrace();
+				System.out.println("Tiempo agotado");
+//				e.printStackTrace();
 			}
-			if(playerC.clientsCount()>=2)
+			if(playerC.clientsCount()>=1)
 			playerC.start();
+			else
+				JOptionPane.showMessageDialog(new JFrame(), "Cantidad de jugadores insuficiente");
 	}
 
 	public static void registerNewUser(int hashC, String[] info) {
@@ -157,7 +165,17 @@ public class Server extends Application {
 	}
 
 	public void timeOut() {
-		match.timeOut();
-		
+		try {
+			gameSocket.close();
+			logSocket.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public boolean isReceiving() {
+		if(logSocket.isClosed())
+		return false;
+		return true;
 	}
 }
