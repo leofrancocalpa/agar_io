@@ -154,7 +154,7 @@ public class Match
 			scores[i] = map.getValue().PLAYER+","+map.getValue().getScore();
 			i++;
 		}
-		return scores;
+		return scores ;
 	}
  
 	/**
