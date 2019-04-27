@@ -24,12 +24,14 @@ import javafx.util.Duration;
 
 public class UserCanvas extends AnchorPane {
 
+	public static final int WIDTH_SCREEN=1920;
+	public static final int HEIGHT_SCREEN=1080;
 	private Stage primaryStage;
 	private Client user;
 	
 	public void start() {
 		
-		Canvas canvas = new Canvas(1024, 680);
+		Canvas canvas = new Canvas(WIDTH_SCREEN, HEIGHT_SCREEN);
 		final GraphicsContext gc = canvas.getGraphicsContext2D();
 		this.getChildren().add(canvas);
 
@@ -63,7 +65,7 @@ public class UserCanvas extends AnchorPane {
 		KeyFrame kf = new KeyFrame(Duration.seconds(0.04), // 0.017 -> 60 FPS
 				new EventHandler<ActionEvent>() {
 					public void handle(ActionEvent ae) {
-						gc.clearRect(0, 0, 1024, 680);
+						gc.clearRect(0, 0, WIDTH_SCREEN, HEIGHT_SCREEN);
 						String[] players = user.getPlayersFromGame();
 						for (int i = 0; i < players.length; i++) {
 							String[] infoPlayer = players[i].split(",");

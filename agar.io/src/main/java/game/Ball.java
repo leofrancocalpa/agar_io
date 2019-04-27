@@ -19,6 +19,7 @@ public class Ball {
 	private double width;
 	private double height;
 	private boolean isAlive;
+	private double score;
 
 	public Ball(String id) {
 		this.id = id;
@@ -32,6 +33,14 @@ public class Ball {
 
 	public void setAlive(boolean live) {
 		isAlive=live;
+	}
+	
+	public void setScore(double newScore) {
+		score += newScore;
+	}
+	
+	public double getScore() {
+		return score;
 	}
 	
 	public boolean getIsAlive() {

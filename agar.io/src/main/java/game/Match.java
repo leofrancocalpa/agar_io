@@ -32,8 +32,8 @@ public class Match
 		//players = new ArrayList<Ball>();
 		food = new HashMap<String, Ball>();
 		players = new HashMap<String, Ball>();
-		this.game_field_size_x=1024;
-		this.game_field_size_y=680;
+		this.game_field_size_x=1920;
+		this.game_field_size_y=1080;
 		timeOut = false;
 		inGame = false;
 	}
@@ -132,14 +132,29 @@ public class Match
 	public void fight(Ball b1, Ball b2) {
 		if(b1.width()>b2.width()) {
 			b1.setMass(b2.width(), b2.width());
+			b1.setScore(b2.width());
 			b2.setAlive(false);
 			System.out.println(b1.width());
 		}
 		else if(b1.width()<b2.width()) {
 			b2.setMass(b1.width(), b1.width());
+			b2.setScore(b1.width());
 			b1.setAlive(false);
 			System.out.println(b2.width());
 		}
+	}
+	
+	public String [] getScores() {
+		String[] scores = new String[players.size()];
+		int[] nums = new int[scores.length];
+		int i =0;
+		Iterator<Map.Entry<String, Ball>> iterator = players.entrySet().iterator();
+		while (iterator.hasNext()) {
+			Map.Entry<java.lang.String, game.Ball> map = (Map.Entry<java.lang.String, game.Ball>) iterator.next();
+			scores[i] = map.getValue().PLAYER+","+map.getValue().getScore();
+			i++;
+		}
+		return scores;
 	}
  
 	/**
