@@ -99,6 +99,9 @@ public class Sprite {
 	public void render(GraphicsContext gc) {
 		gc.setFill(color);
 		gc.fillOval(positionX-(width/2), positionY-(height/2), width, height);
+		gc.setStroke(Color.BLACK);
+		gc.strokeOval(positionX-(width/2), positionY-(height/2), width, height);
+		
 	}
 
 	public Rectangle2D getBoundary() {

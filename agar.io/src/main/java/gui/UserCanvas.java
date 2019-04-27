@@ -26,6 +26,8 @@ public class UserCanvas extends AnchorPane {
 
 	public static final int WIDTH_SCREEN=1920;
 	public static final int HEIGHT_SCREEN=1080;
+	public int[] px = {100,100,100,100};
+	public int[] py = {50,100,150,200};
 	private Stage primaryStage;
 	private Client user;
 	
@@ -37,13 +39,13 @@ public class UserCanvas extends AnchorPane {
 
 		drawShapes(gc);
 		
-		// Clear away portions as the user drags the mouse
-//		canvas.setOnMouseEntered(new EventHandler<MouseEvent>() {
-//			public void handle(MouseEvent e) {
-//				
-//
-//			}
-//		});
+		
+		canvas.setOnMouseClicked(new EventHandler<MouseEvent>() {
+			public void handle(MouseEvent e) {
+				System.out.println(e.getX() +" "+e.getY());
+
+			}
+		});
 
 	}
 
@@ -58,7 +60,7 @@ public class UserCanvas extends AnchorPane {
 		final double B = Double.parseDouble(infoPlayer[8]);
 		final Sprite player = new Sprite(user_id);
 		player.setPosition(user_x, user_y);
-		player.setColor(R, G, B, 1);
+		player.setColor(R, G, B, 0.9);
 		
 		Timeline gameLoop = new Timeline();
 		gameLoop.setCycleCount(Timeline.INDEFINITE);
@@ -66,6 +68,7 @@ public class UserCanvas extends AnchorPane {
 				new EventHandler<ActionEvent>() {
 					public void handle(ActionEvent ae) {
 						gc.clearRect(0, 0, WIDTH_SCREEN, HEIGHT_SCREEN);
+						drawBackGround(gc);
 						String[] players = user.getPlayersFromGame();
 						for (int i = 0; i < players.length; i++) {
 							String[] infoPlayer = players[i].split(",");
@@ -82,7 +85,7 @@ public class UserCanvas extends AnchorPane {
 								player.setPosition(user_x, user_y);
 								player.setMass(user_w, user_h);
 								player.setLive(infoPlayer[5]);
-								player.setColor(R, G, B, 1);
+								player.setColor(R, G, B, 0.9);
 								player.render(gc);
 							}
 							
@@ -105,11 +108,12 @@ public class UserCanvas extends AnchorPane {
 								aFood.setPosition(food_x, food_y);
 								aFood.setMass(food_w, food_h);
 								aFood.setLive("T");
-								aFood.setColor(R, G, B, 1);
+								aFood.setColor(R, G, B, 0.9);
 								aFood.render(gc);
 							}
 							
 						}
+						
 						String[] infoPlayer = user.getInfoPlayer().split(",");
 						double user_w = Double.parseDouble(infoPlayer[2]);
 						double user_h = Double.parseDouble(infoPlayer[3]);
@@ -128,6 +132,7 @@ public class UserCanvas extends AnchorPane {
 						player.changePosition(nx, ny);
 						player.setMass(user_w, user_h);
 						player.render(gc);
+						
 						StringBuilder state = new StringBuilder();
 						state.append(player.x());
 						state.append(",");
@@ -151,11 +156,38 @@ public class UserCanvas extends AnchorPane {
 						state.append(B);
 						user.updatePlayer(state.toString());
 						}
+						//Print Scores
+						String[] scores = user.getScores();
+						gc.setFill(new Color(Color.BLACK.getRed(), Color.BLACK.getBlue(), Color.BLACK.getGreen(), 0.3));
+						gc.fillRect(30, 30, 180, 250);
+						for (int i=0; i<scores.length; i++) {
+							gc.setFill(Color.BLACK);
+							String[] chain = scores[i].split(","); 
+							gc.fillText(chain[0]+"  "+chain[1], px[i], py[i]);
+							gc.setStroke(Color.BLACK);
+							gc.strokeText(chain[0]+"  "+chain[1], px[i], py[i]);
+						}//finish scores
 					}
 				});
 		gameLoop.getKeyFrames().add(kf);
 		gameLoop.play();
 
+	}
+	
+	public void drawBackGround(GraphicsContext gc) {
+		int spaceX =30;
+		int spaceY =30;
+		gc.setStroke(new Color(Color.DARKGRAY.getRed(), Color.DARKGRAY.getBlue(), Color.DARKGRAY.getGreen(), 0.4));
+		for(int i=0; i<64; i++) {
+			gc.strokeLine(spaceX, 0, spaceX, 1080);
+//			gc.fillRect(spaceX, 0, spaceX, 1080);
+			spaceX+=30;
+		}
+		for(int i=0; i<36; i++) {
+			gc.strokeLine(0, spaceY, 1920, spaceY);
+//			gc.fillRect(0, spaceY, 1920, spaceY);
+			spaceY+=30;
+		}
 	}
 	
 	public void setClient(Client client) {

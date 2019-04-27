@@ -13,7 +13,7 @@ import javafx.scene.paint.Color;
 
 public class Match 
 {
-	public static final int FOOD_NUM_MAX=40;
+	public static final int FOOD_NUM_MAX=150;
 	public static final int FOOD_WIDTH=20;
 	public static final int FOOD_HEIGHT=20;
 	public static final int PLAYER_MIN_SIZE=30;
@@ -100,33 +100,34 @@ public class Match
 //			//do nothing
 //		}
 //		else {
-			Iterator<Map.Entry<String, Ball>> iterator = players.entrySet().iterator();
-			while (iterator.hasNext()) {
-				Map.Entry<java.lang.String, game.Ball> map = (Map.Entry<java.lang.String, game.Ball>) iterator.next();
-				Iterator<Map.Entry<String, Ball>> itFood = food.entrySet().iterator();
-				if(players.get(map.getKey()).getIsAlive()==false) {
-					break;
-				}
-			while(itFood.hasNext()) {
+		Iterator<Map.Entry<String, Ball>> iterator = players.entrySet().iterator();
+		while (iterator.hasNext()) {
+			Map.Entry<java.lang.String, game.Ball> map = (Map.Entry<java.lang.String, game.Ball>) iterator.next();
+			Iterator<Map.Entry<String, Ball>> itFood = food.entrySet().iterator();
+			if (players.get(map.getKey()).getIsAlive() == false) {
+				break;
+			}
+			while (itFood.hasNext()) {
 				Map.Entry<java.lang.String, game.Ball> mapFood = (Map.Entry<java.lang.String, game.Ball>) itFood.next();
-				if(food.get(mapFood.getKey()).intersects(players.get(map.getKey()))) {
-					if(food.get(mapFood.getKey()).getIsAlive())
-					fight(food.get(mapFood.getKey()), players.get(map.getKey()));
+				if (food.get(mapFood.getKey()).intersects(players.get(map.getKey()))) {
+					if (food.get(mapFood.getKey()).getIsAlive())
+						fight(food.get(mapFood.getKey()), players.get(map.getKey()));
 				}
 			}
 			Iterator<Map.Entry<String, Ball>> itEnemy = players.entrySet().iterator();
 			while (itEnemy.hasNext()) {
 				Map.Entry<java.lang.String, game.Ball> mapE = (Map.Entry<java.lang.String, game.Ball>) itEnemy.next();
-				if(players.get(mapE.getKey()).intersects(players.get(map.getKey())) && !players.get(mapE.getKey()).equals(players.get(map.getKey()))) {
-					if(players.get(mapE.getKey()).getIsAlive())
-					fight(players.get(mapE.getKey()), players.get(map.getKey()));
+				if (players.get(mapE.getKey()).intersects(players.get(map.getKey()))
+						&& !players.get(mapE.getKey()).equals(players.get(map.getKey()))) {
+					if (players.get(mapE.getKey()).getIsAlive())
+						fight(players.get(mapE.getKey()), players.get(map.getKey()));
 				}
 			}
 //			}
 //			hm.remove(map.getKey(), map.getValue());
 //			compareIntersections(hm);
 		}
-		
+
 	}
 	
 	public void fight(Ball b1, Ball b2) {
@@ -151,7 +152,7 @@ public class Match
 		Iterator<Map.Entry<String, Ball>> iterator = players.entrySet().iterator();
 		while (iterator.hasNext()) {
 			Map.Entry<java.lang.String, game.Ball> map = (Map.Entry<java.lang.String, game.Ball>) iterator.next();
-			scores[i] = map.getValue().PLAYER+","+map.getValue().getScore();
+			scores[i] = map.getValue().getId()+","+map.getValue().getScore();
 			i++;
 		}
 		return scores ;
