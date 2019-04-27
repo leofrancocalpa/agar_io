@@ -15,6 +15,12 @@
   </properties>
 
   <dependencies>
+  <dependency>
+    <groupId>com.guigarage</groupId>
+    <artifactId>javafx-collection</artifactId>
+    <version>0.7</version>
+    <type>pom</type>
+</dependency>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
