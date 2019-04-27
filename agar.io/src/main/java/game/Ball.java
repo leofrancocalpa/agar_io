@@ -89,7 +89,7 @@ public class Ball {
 	}
 
 	public Rectangle2D getBoundary() {
-		return new Rectangle2D(x, y, width, height);
+		return new Rectangle2D(x-(width/2), y-(height/2), width, height);
 	}
 
 	public boolean intersects(Ball s) {
