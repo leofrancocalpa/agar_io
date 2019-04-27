@@ -35,7 +35,7 @@ public class Match
 		this.game_field_size_x=1920;
 		this.game_field_size_y=1080;
 		timeOut = false;
-		inGame = false;
+		setInGame(false);
 	}
 	
 	public void initialize(ArrayList<String> playersFromServer) {
@@ -194,6 +194,14 @@ public class Match
 
 	public void timeOut() {
 		timeOut = true;
+	}
+
+	public boolean isInGame() {
+		return inGame;
+	}
+
+	public void setInGame(boolean inGame) {
+		this.inGame = inGame;
 	}
 		
 }

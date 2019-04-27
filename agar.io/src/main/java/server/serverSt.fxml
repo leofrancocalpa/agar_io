@@ -23,8 +23,8 @@
                <content>
                   <TableView fx:id="usersTable" prefHeight="200.0" prefWidth="200.0">
                     <columns>
-                      <TableColumn prefWidth="189.0" text="Nickname" />
-                      <TableColumn prefWidth="84.0" text="Score" />
+                      <TableColumn fx:id="nickNameColumn" prefWidth="189.0" text="Nickname" />
+                      <TableColumn fx:id="emailColumn" prefWidth="84.0" text="E-mail" />
                     </columns>
                   </TableView>
                </content>
@@ -33,8 +33,8 @@
                <content>
                   <TableView fx:id="matchTable" prefHeight="200.0" prefWidth="200.0">
                      <columns>
-                        <TableColumn prefWidth="182.0" text="Item" />
-                        <TableColumn prefWidth="91.0" text="Value" />
+                        <TableColumn fx:id="nickScoreColumn" prefWidth="182.0" text="Nickname" />
+                        <TableColumn fx:id="scoreColumn" prefWidth="91.0" text="Score" />
                      </columns>
                   </TableView>
                </content>

@@ -5,6 +5,7 @@ public class User {
 	private String email;
 	private String nickname;
 	private String password;
+	private double score;
 	private boolean inGame;
 	
 	public User(String pEmail, String pNickname, String pPassword) {
@@ -12,6 +13,7 @@ public class User {
 		nickname = pNickname;
 		password = pPassword;
 		inGame = false;
+		score = 0;
 	}
 	
 	public String getEmail() {

@@ -29,7 +29,7 @@ public class Server extends Application {
 	public static final String KEYSTORE_LOCATION = "C:/Users/99031510240/alv";
 	public static final String KEYSTORE_PASSWORD = "123456";
 
-	private ServerStController serverSt;
+	private static ServerStController serverSt;
 	private static HashMap<Integer, SSLConnection> threads = new HashMap<Integer, SSLConnection>();
 //	private static ThreadGroup threadsGroup = new ThreadGroup("threadsGroup");
 	private static HashMap<String, User> users = new HashMap<String, User>();
@@ -81,7 +81,7 @@ public class Server extends Application {
 			try {
 				ServerSocket server = ssf.createServerSocket(8040);
 				gameSocket = server;
-				while (playerC.clientsCount() < 5) {
+				while (playerC.clientsCount() < 1) {
 				Socket c = server.accept();
 				playerC.addSocket(c);
 				}
@@ -109,8 +109,10 @@ public class Server extends Application {
 	public static void playGameOf(int hashC, String[] userAndPass) {
 		User toPlay = users.get(userAndPass[0]);
 		if (toPlay != null) {
-			if (toPlay.getPassword().equals(userAndPass[1]))
+			if (toPlay.getPassword().equals(userAndPass[1])) {
 				toPlay.setInGame(true);
+				serverSt.clientJoined(toPlay);
+			}
 		}
 		if (toPlay == null || !toPlay.isInGame())
 			threads.get(hashC).writeSessionStatus(SSLConnection.SESSION_FAILED);
@@ -177,5 +179,13 @@ public class Server extends Application {
 		if(logSocket.isClosed())
 		return false;
 		return true;
+	}
+
+	public boolean isReady() {
+		return logSocket!=null && !logSocket.isClosed();
+	}
+
+	public boolean isInGame() {
+		return match.isInGame();
 	}
 }
