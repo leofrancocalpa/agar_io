@@ -35,6 +35,7 @@ public class Client extends Application{
 	private String[] enemies;
 	private String player;
 	private String[] food;
+	private String[] scores;
 	
 	public String getNickName() {
 		return nickName;
@@ -50,7 +51,6 @@ public class Client extends Application{
 			primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
 				
 				public void handle(WindowEvent event) {
-					// TODO Auto-generated method stub
 					primaryStage.close();
 				}
 			});
@@ -78,7 +78,6 @@ public class Client extends Application{
 
 	public void putLogInC(LoginController loginController) {
 		logInC = loginController;
-
 	}
 
 	public void connectToServer() {
@@ -228,6 +227,7 @@ public class Client extends Application{
 		String[] arreglos = entry.split("/");
 		enemies = arreglos[0].split(" ");
 		food = arreglos[1].split(" ");
+		scores = arreglos[2].split(" ");
 		if(player == null)
 			player = enemies[posPlayer];
 		else {
@@ -242,6 +242,9 @@ public class Client extends Application{
 		}
 	}
 	
+	public String[] getScores() {
+		return scores;
+	}
 	public int getStatus() {
 		return sessionStatus;
 	}

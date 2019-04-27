@@ -132,6 +132,11 @@ public class Server extends Application {
 		for (int i = 0; i < food.length; i++) {
 			sb.append(food[i] + " ");
 		}
+		sb.append("/");
+		String[] scores = match.getScores();
+		for (int i = 0; i < scores.length; i++) {
+			sb.append(scores[i] + " ");
+		}
 		return sb.toString();
 	}
 
