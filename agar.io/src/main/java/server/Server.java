@@ -89,8 +89,15 @@ public class Server extends Application {
 				System.out.println("Tiempo agotado");
 //				e.printStackTrace();
 			}
-			if(playerC.clientsCount()>=1)
-			playerC.start();
+			if(playerC.clientsCount()>=1) {
+				AudioUDPServer audio = new AudioUDPServer();
+				audio.start();
+				TransmitionAudio ta = new TransmitionAudio();
+				ta.start();
+				playerC.start();
+				
+			}
+			
 			else
 				JOptionPane.showMessageDialog(new JFrame(), "Cantidad de jugadores insuficiente");
 	}

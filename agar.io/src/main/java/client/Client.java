@@ -145,6 +145,11 @@ public class Client extends Application{
 			try {
 				readerC = new BufferedReader(new InputStreamReader(client.getInputStream()));
 				System.out.println("Se conecta al juego");
+				AudioUDPClient audio = new AudioUDPClient();
+				audio.start();
+				ReceptionAudio ra = new ReceptionAudio();
+				ra.start();
+				
 				while (client.isConnected()) {
 					final String infoGame = readerC.readLine();
 //					System.out.println(infoGame);
