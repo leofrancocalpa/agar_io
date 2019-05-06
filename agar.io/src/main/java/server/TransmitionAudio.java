@@ -30,7 +30,7 @@ public class TransmitionAudio extends Thread{
 	private static AudioFormat getAudioFormat() {
 		float sampleRate = 16000F;
 		int sampleSizeInBits = 16;
-		int channels = 1;
+		int channels = 2;
 		boolean signed = false;
 		boolean bigEndian = false;
 		return new AudioFormat(sampleRate, sampleSizeInBits, channels, signed, bigEndian);

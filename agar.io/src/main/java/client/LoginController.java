@@ -9,15 +9,12 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import server.SSLConnection;
-import server.Server;
+import settings.ServerMessage;
 
 public class LoginController {
 
@@ -100,12 +97,12 @@ public class LoginController {
 
 	public void showMessage(String line) {
 
-		if (line.equals(SSLConnection.REGISTER_SUCCESS)) {
-			JOptionPane.showMessageDialog(new JFrame(), SSLConnection.REGISTER_SUCCESS, "Register complete",
+		if (line.equals(ServerMessage.REGISTER_SUCCESS.getMessage())) {
+			JOptionPane.showMessageDialog(new JFrame(), ServerMessage.REGISTER_SUCCESS.getMessage(), "Register complete",
 					JOptionPane.INFORMATION_MESSAGE);
 //		closeSigninWindow();
-		} else if (line.equals(SSLConnection.SESSION_FAILED)) {
-			JOptionPane.showMessageDialog(new JFrame(), SSLConnection.SESSION_FAILED, "Session failed",
+		} else if (line.equals(ServerMessage.SESSION_FAILED.getMessage())) {
+			JOptionPane.showMessageDialog(new JFrame(), ServerMessage.SESSION_FAILED.getMessage(), "Session failed",
 					JOptionPane.ERROR_MESSAGE);
 		}
 	}

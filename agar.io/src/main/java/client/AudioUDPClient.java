@@ -21,7 +21,7 @@ public class AudioUDPClient  extends Thread{
            
             // play soundfile from server
             System.out.println("Client: reading from 127.0.0.1:6666");
-            try (Socket socket = new Socket("127.0.0.1", 6666)) {
+            try (Socket socket = new Socket("Despair", 6666)) {
             	while(true) {
                 if (socket.isConnected()) {
                     InputStream in = new BufferedInputStream(socket.getInputStream());
@@ -29,7 +29,7 @@ public class AudioUDPClient  extends Thread{
                 }
                 }
             }catch (Exception e) {
-            	
+            	e.printStackTrace();
             }
         
             

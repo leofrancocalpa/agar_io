@@ -6,7 +6,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
-
+import settings.*;
 import javax.net.SocketFactory;
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
@@ -16,8 +16,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import server.PlayerConnection;
-import server.SSLConnection;
 import javafx.scene.Parent;
 
 public class Client extends Application{
@@ -89,7 +87,7 @@ public class Client extends Application{
 				SSLSocketFactory sf = (SSLSocketFactory) SSLSocketFactory.getDefault();
 				
 				try {
-					client = (SSLSocket) sf.createSocket("localhost", 8030);
+					client = (SSLSocket) sf.createSocket("Despair", Port.LOGIN.getPort());
 					String[] supported = client.getSupportedCipherSuites();
 					client.setEnabledCipherSuites(supported);
 					writerC = new PrintWriter(client.getOutputStream(), true);
@@ -103,11 +101,14 @@ public class Client extends Application{
 						while (client.isConnected()) {
 							final String serverAnswer = readerC.readLine();
 							logInC.showMessage(serverAnswer);
-							if(serverAnswer.endsWith(SSLConnection.WAITING_MATCH)) {
+							if(serverAnswer.endsWith(ServerMessage.WAITING_MATCH.getMessage())) {
 								nickName = serverAnswer.split(" ")[1];
 								connectToGame();
 								sessionStatus = READY;
+							} else if (serverAnswer.endsWith(ServerMessage.JOIN_SPECTATOR.getMessage())) {
+								
 							}
+						
 						}
 					} catch (IOException e) {
 						try {
@@ -134,7 +135,7 @@ public class Client extends Application{
 		SocketFactory sf = SocketFactory.getDefault();
 		
 		try {
-			client = sf.createSocket("localhost", 8040);
+			client = sf.createSocket("Despair", Port.GAME.getPort());
 			writerC = new PrintWriter(client.getOutputStream(), true);
 			writerC.println(nickName);
 			
@@ -147,13 +148,13 @@ public class Client extends Application{
 				System.out.println("Se conecta al juego");
 				AudioUDPClient audio = new AudioUDPClient();
 				audio.start();
-				ReceptionAudio ra = new ReceptionAudio();
-				ra.start();
+//				ReceptionAudio ra = new ReceptionAudio();
+//				ra.start();
 				
 				while (client.isConnected()) {
 					final String infoGame = readerC.readLine();
 //					System.out.println(infoGame);
-					if(!infoGame.startsWith(PlayerConnection.STARTING_MATCH)) {
+					if(!infoGame.startsWith(ServerMessage.STARTING_MATCH.getMessage())) {
 						updateGame(infoGame);
 						sendToServer(getInfoPlayer());
 					}

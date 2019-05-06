@@ -1,7 +1,6 @@
 package server;
 
 import java.io.IOException;
-import java.lang.Thread.State;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -17,12 +16,12 @@ import javax.swing.JOptionPane;
 
 import game.Match;
 import javafx.application.Application;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
+import settings.Port;
+import settings.ServerMessage;
 
 public class Server extends Application {
 
@@ -50,7 +49,7 @@ public class Server extends Application {
 
 			public void run() {
 				try {
-					SSLServerSocket server = (SSLServerSocket) ssf.createServerSocket(8030);
+					SSLServerSocket server = (SSLServerSocket) ssf.createServerSocket(Port.LOGIN.getPort());
 					logSocket = server;
 					while (true) {
 //						for (Integer tId : threads.keySet()) {
@@ -78,24 +77,25 @@ public class Server extends Application {
 	public void startMatchConnection() {
 		ServerSocketFactory ssf = ServerSocketFactory.getDefault();
 		PlayerConnection playerC = new PlayerConnection();
+		AudioUDPServer audio = new AudioUDPServer();
+		StreamingService stream = new StreamingService();
 			try {
-				ServerSocket server = ssf.createServerSocket(8040);
+				ServerSocket server = ssf.createServerSocket(Port.GAME.getPort());
 				gameSocket = server;
 				while (playerC.clientsCount() < 1) {
 				Socket c = server.accept();
 				playerC.addSocket(c);
+				audio.start();
 				}
 			} catch (IOException e) {
 				System.out.println("Tiempo agotado");
 //				e.printStackTrace();
 			}
 			if(playerC.clientsCount()>=1) {
-				AudioUDPServer audio = new AudioUDPServer();
-				audio.start();
-				TransmitionAudio ta = new TransmitionAudio();
-				ta.start();
+//				TransmitionAudio ta = new TransmitionAudio();
+//				ta.start();
 				playerC.start();
-				
+				stream.start();
 			}
 			
 			else
@@ -110,7 +110,7 @@ public class Server extends Application {
 	private static String signIn(String email, String nickname, String password) {
 		User user = new User(email, nickname, password);
 		users.put(email, user);
-		return SSLConnection.REGISTER_SUCCESS;
+		return ServerMessage.REGISTER_SUCCESS.getMessage();
 	}
 
 	public static void playGameOf(int hashC, String[] userAndPass) {
@@ -122,9 +122,9 @@ public class Server extends Application {
 			}
 		}
 		if (toPlay == null || !toPlay.isInGame())
-			threads.get(hashC).writeSessionStatus(SSLConnection.SESSION_FAILED);
+			threads.get(hashC).writeSessionStatus(ServerMessage.SESSION_FAILED.getMessage());
 		else {
-			threads.get(hashC).writeSessionStatus("Hello "+ toPlay.getNickname() +" " +SSLConnection.WAITING_MATCH);
+			threads.get(hashC).writeSessionStatus("Hello "+ toPlay.getNickname() +" " +ServerMessage.WAITING_MATCH.getMessage());
 		}
 	}
 

@@ -9,9 +9,10 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.util.ArrayList;
 
+import settings.ServerMessage;
+
 public class PlayerConnection extends Thread {
 
-	public static final String STARTING_MATCH = "Starting match. 3, 2, 1...";
 	ArrayList<Socket> clients;
 	ArrayList<BufferedReader> readerC;
 	ArrayList<PrintWriter> writerC;
@@ -35,7 +36,7 @@ public class PlayerConnection extends Thread {
 			String stateFromGame = Server.getStateFromGame();
 			for (int i = 0; i < clients.size(); i++) {
 				writerC.get(i).println(stateFromGame);
-				writerC.get(i).println(STARTING_MATCH + i);
+				writerC.get(i).println(ServerMessage.STARTING_MATCH.getMessage() + i);
 			}
 			while (true) {
 				for (int i = 0; i < clients.size(); i++) {
