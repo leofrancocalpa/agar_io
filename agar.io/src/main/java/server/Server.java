@@ -77,7 +77,6 @@ public class Server extends Application {
 	public void startMatchConnection() {
 		ServerSocketFactory ssf = ServerSocketFactory.getDefault();
 		PlayerConnection playerC = new PlayerConnection();
-		AudioUDPServer audio = new AudioUDPServer();
 		StreamingService stream = new StreamingService();
 			try {
 				ServerSocket server = ssf.createServerSocket(Port.GAME.getPort());
@@ -85,15 +84,14 @@ public class Server extends Application {
 				while (playerC.clientsCount() < 1) {
 				Socket c = server.accept();
 				playerC.addSocket(c);
-				audio.start();
 				}
 			} catch (IOException e) {
 				System.out.println("Tiempo agotado");
 //				e.printStackTrace();
 			}
 			if(playerC.clientsCount()>=1) {
-//				TransmitionAudio ta = new TransmitionAudio();
-//				ta.start();
+				TransmitionAudio ta = new TransmitionAudio();
+				ta.start();
 				playerC.start();
 				stream.start();
 			}

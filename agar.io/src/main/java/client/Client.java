@@ -88,7 +88,7 @@ public class Client extends Application{
 				SSLSocketFactory sf = (SSLSocketFactory) SSLSocketFactory.getDefault();
 				
 				try {
-					client = (SSLSocket) sf.createSocket("Despair", Port.LOGIN.getPort());
+					client = (SSLSocket) sf.createSocket("localhost", Port.LOGIN.getPort());
 					String[] supported = client.getSupportedCipherSuites();
 					client.setEnabledCipherSuites(supported);
 					writerC = new PrintWriter(client.getOutputStream(), true);
@@ -155,7 +155,7 @@ public class Client extends Application{
 		SocketFactory sf = SocketFactory.getDefault();
 		
 		try {
-			client = sf.createSocket("Despair", Port.GAME.getPort());
+			client = sf.createSocket("localhost", Port.GAME.getPort());
 			writerC = new PrintWriter(client.getOutputStream(), true);
 			writerC.println(nickName);
 			
@@ -166,10 +166,8 @@ public class Client extends Application{
 			try {
 				readerC = new BufferedReader(new InputStreamReader(client.getInputStream()));
 				System.out.println("Se conecta al juego");
-				AudioUDPClient audio = new AudioUDPClient();
-				audio.start();
-//				ReceptionAudio ra = new ReceptionAudio();
-//				ra.start();
+				ReceptionAudio ra = new ReceptionAudio();
+				ra.start();
 				
 				while (client.isConnected()) {
 					final String infoGame = readerC.readLine();

@@ -1,5 +1,6 @@
 package client;
 
+import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.net.DatagramPacket;
@@ -9,6 +10,7 @@ import java.net.MulticastSocket;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import javax.sound.sampled.DataLine;
 import javax.sound.sampled.SourceDataLine;
 
@@ -21,6 +23,7 @@ public class ReceptionAudio extends Thread{
 	public void run() {
 		// TODO Auto-generated method stub
 		super.run();
+		this.setPriority(MAX_PRIORITY);
 		initiateAudio();
 
 	}
@@ -32,14 +35,13 @@ public class ReceptionAudio extends Thread{
 	private static void initiateAudio() {
 		try {
 			MulticastSocket socket = new MulticastSocket(9786);
-			InetAddress group = InetAddress.getByName("230.0.0.0");
+			InetAddress group = InetAddress.getByName("229.0.0.0");
 			socket.joinGroup(group);
-			byte[] audioBuffer = new byte[10000];
-			// ...
+			
 			while (true) {
+				byte[] audioBuffer = new byte[60000];
 				DatagramPacket packet = new DatagramPacket(audioBuffer, audioBuffer.length);
 				socket.receive(packet);
-				// ...
 
 				try {
 					byte audioData[] = packet.getData();
@@ -47,13 +49,10 @@ public class ReceptionAudio extends Thread{
 					AudioFormat audioFormat = getAudioFormat();
 					audioInputStream = new AudioInputStream(byteInputStream, audioFormat,
 							audioData.length / audioFormat.getFrameSize());
-					DataLine.Info dataLineInfo = new DataLine.Info(SourceDataLine.class, audioFormat);
-
-					sourceDataLine = (SourceDataLine) AudioSystem.getLine(dataLineInfo);
-					sourceDataLine.open(audioFormat);
-					sourceDataLine.start();
-					playAudio();
+					play(audioInputStream);
+					
 				} catch (Exception e) {
+					e.printStackTrace();
 					// Handle exceptions
 				}
 
@@ -75,22 +74,20 @@ public class ReceptionAudio extends Thread{
 		boolean bigEndian = false;
 		return new AudioFormat(sampleRate, sampleSizeInBits, channels, signed, bigEndian);
 	}
-
-	/*
-	*this method play the audio on the client's side
-	*/
-	private static void playAudio() {
-		byte[] buffer = new byte[10000];
-		try {
-			int count;
-			while ((count = audioInputStream.read(buffer, 0, buffer.length)) != -1) {
-				if (count > 0) {
-					sourceDataLine.write(buffer, 0, count);
-				}
-			}
-		} catch (Exception e) {
-			// Handle exceptions
-		}
-	}
+	
+    private synchronized static void play(AudioInputStream ais) throws Exception {
+    	
+        try (Clip clip = AudioSystem.getClip()) {
+        	System.out.println("Playing audio: "+clip);
+            clip.open(ais);
+            clip.start();
+            Thread.sleep(100); // given clip.drain a chance to start
+            clip.drain();
+        }
+        catch(Exception e) {
+        	e.printStackTrace();
+        	System.out.println(e.getMessage());
+        }
+    }
 
 }
