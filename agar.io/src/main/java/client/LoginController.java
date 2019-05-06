@@ -38,26 +38,39 @@ public class LoginController {
 		this.client = client;
 	}
 
-    @FXML
-    void login(ActionEvent event) {
-    	stage = new Stage();
-    	
-    	client.sendToServer(txt_email.getText() + " " + txt_password.getText());
-		int cont = 120;
-		while (client.getStatus()!=Client.PLAYING && cont > 0) {
-			try {
-				Thread.sleep(1000);
-				cont--;
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
-		startGame();
-    }
+	@FXML
+	void login(ActionEvent event) {
+		stage = new Stage();
 
-    @FXML
-    void sign_In(ActionEvent event) {
-    	FXMLLoader loader = new FXMLLoader();
+		client.sendToServer(txt_email.getText() + " " + txt_password.getText());
+		try {
+			int cont = 5;
+			while(cont > 0 && client.getStatus() != Client.PLAYING && client.getStatus() != Client.READY && client.getStatus() != Client.WATCHING) {
+				Thread.sleep(200);
+				cont--;
+				System.out.println("busca estados " + cont);				
+			}
+		if (client.getStatus() == Client.PLAYING || client.getStatus() == Client.READY) {
+			cont = 120;
+			while (client.getStatus() != Client.PLAYING && cont > 0) {
+				System.out.println("Entra a esperar");
+					Thread.sleep(1000);
+					cont--;
+			}
+			startGame();
+		} else if(client.getStatus() == Client.WATCHING) {
+			Thread.sleep(1000);
+			System.out.println("modo espectador iniciado");
+			startGame();
+		}
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@FXML
+	void sign_In(ActionEvent event) {
+		FXMLLoader loader = new FXMLLoader();
 		stage = new Stage();
 		try {
 			AnchorPane root = loader.load(getClass().getResource("signin.fxml").openStream());
@@ -68,7 +81,7 @@ public class LoginController {
 			stage.setScene(scene);
 			stage.show();
 			stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-				
+
 				public void handle(WindowEvent event) {
 					// TODO Auto-generated method stub
 					stage.close();
@@ -83,12 +96,12 @@ public class LoginController {
 
 	void startGame() {
 		UserCanvas canvas = new UserCanvas();
-    		canvas.setClient(client);
-    		canvas.start();
-        	Scene scene = new Scene(canvas);
-        	stage.setScene(scene);
-        	stage.setFullScreen(true);
-        	stage.show();
+		canvas.setClient(client);
+		canvas.start();
+		Scene scene = new Scene(canvas);
+		stage.setScene(scene);
+		stage.setFullScreen(true);
+		stage.show();
 	}
 
 	void closeSigninWindow() {
@@ -98,8 +111,8 @@ public class LoginController {
 	public void showMessage(String line) {
 
 		if (line.equals(ServerMessage.REGISTER_SUCCESS.getMessage())) {
-			JOptionPane.showMessageDialog(new JFrame(), ServerMessage.REGISTER_SUCCESS.getMessage(), "Register complete",
-					JOptionPane.INFORMATION_MESSAGE);
+			JOptionPane.showMessageDialog(new JFrame(), ServerMessage.REGISTER_SUCCESS.getMessage(),
+					"Register complete", JOptionPane.INFORMATION_MESSAGE);
 //		closeSigninWindow();
 		} else if (line.equals(ServerMessage.SESSION_FAILED.getMessage())) {
 			JOptionPane.showMessageDialog(new JFrame(), ServerMessage.SESSION_FAILED.getMessage(), "Session failed",

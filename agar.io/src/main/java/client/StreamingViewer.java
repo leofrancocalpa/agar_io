@@ -7,10 +7,11 @@ import settings.Port;
 import java.io.*;
 
 public class StreamingViewer extends Thread {
+	
 	 protected MulticastSocket socket = null;
 	 protected String gameState;
-	    protected byte[] buf = new byte[256];
-	 
+	    protected byte[] buf = new byte[16000];
+		
 	    public void run() {
 	        try {
 				socket = new MulticastSocket(Port.STREAM.getPort());
@@ -24,12 +25,13 @@ public class StreamingViewer extends Thread {
 	            if ("end".equals(received)) {
 	                break;
 	            } else {
-	            	gameState= received;
+	            	gameState = received;
 	            }
+	            Thread.sleep(36);
 	        }
 	        socket.leaveGroup(group);
 	        socket.close();
-	        } catch (IOException e) {
+	        } catch (IOException | InterruptedException e) {
 	        	e.printStackTrace();
 	        }
 	    }

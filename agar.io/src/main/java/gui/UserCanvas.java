@@ -58,7 +58,10 @@ public class UserCanvas extends AnchorPane {
 		final double R = Double.parseDouble(infoPlayer[6]);
 		final double G = Double.parseDouble(infoPlayer[7]);
 		final double B = Double.parseDouble(infoPlayer[8]);
-		final Sprite player = new Sprite(user_id);
+		final Sprite player;
+		if(infoPlayer[5].equals("T"))
+		player = new Sprite(user_id, true);
+		else player = new Sprite(user_id, false);
 		player.setPosition(user_x, user_y);
 		player.setColor(R, G, B, 0.9);
 		
@@ -81,7 +84,7 @@ public class UserCanvas extends AnchorPane {
 								double R = Double.parseDouble(infoPlayer[6]);
 								double G = Double.parseDouble(infoPlayer[7]);
 								double B = Double.parseDouble(infoPlayer[8]);
-								final Sprite player = new Sprite(user_id);
+								final Sprite player = new Sprite(user_id, true);
 								player.setPosition(user_x, user_y);
 								player.setMass(user_w, user_h);
 								player.setLive(infoPlayer[5]);
@@ -104,7 +107,7 @@ public class UserCanvas extends AnchorPane {
 								double G = Double.parseDouble(infoFood[7]);
 								double B = Double.parseDouble(infoFood[8]);
 
-								final Sprite aFood = new Sprite(infoFood[4]);
+								final Sprite aFood = new Sprite(infoFood[4], true);
 								aFood.setPosition(food_x, food_y);
 								aFood.setMass(food_w, food_h);
 								aFood.setLive("T");

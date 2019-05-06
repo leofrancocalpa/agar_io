@@ -20,13 +20,13 @@ public class Sprite {
 	private boolean live;
 	public Color color;
 
-	public Sprite(String id) {
+	public Sprite(String id, boolean live) {
 		this.id = id;
 		positionX = 0;
 		positionY = 0;
 		velocityX = 5;
 		velocityY = 5;
-		live=true;
+		this.live=live;
 	}
 	
 	public boolean getLive() {

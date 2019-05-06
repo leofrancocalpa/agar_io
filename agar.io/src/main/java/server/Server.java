@@ -124,7 +124,9 @@ public class Server extends Application {
 		if (toPlay == null || !toPlay.isInGame())
 			threads.get(hashC).writeSessionStatus(ServerMessage.SESSION_FAILED.getMessage());
 		else {
+			if(!match.isInGame())
 			threads.get(hashC).writeSessionStatus("Hello "+ toPlay.getNickname() +" " +ServerMessage.WAITING_MATCH.getMessage());
+			else threads.get(hashC).writeSessionStatus("Hello "+ toPlay.getNickname() +" " +ServerMessage.JOIN_SPECTATOR.getMessage());
 		}
 	}
 
@@ -175,6 +177,7 @@ public class Server extends Application {
 		for (int i = 0; i < playersInfo.length; i++) {
 			players.add(playersInfo[i]);
 		}
+		match.setInGame(true);
 		match.initialize(players);
 	}
 

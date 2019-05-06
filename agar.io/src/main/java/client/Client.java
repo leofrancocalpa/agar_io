@@ -23,10 +23,11 @@ public class Client extends Application{
 	public static final int OFFLINE = 0;
 	public static final int READY = 1;
 	public static final int PLAYING = 2;
+	public static final int WATCHING = 3;
 	
 	public static PrintWriter writerC;
 	private static LoginController logInC;
-	
+	private StreamingViewer sv;
 	private int sessionStatus;
 	private int posPlayer;
 	private String nickName;
@@ -106,9 +107,13 @@ public class Client extends Application{
 								connectToGame();
 								sessionStatus = READY;
 							} else if (serverAnswer.endsWith(ServerMessage.JOIN_SPECTATOR.getMessage())) {
-								
+								player= 0+","+0+","+10+","+10+","+"Spectator"+","+"F"+","+0+","+0+","+0;
+								posPlayer = -1;
+								sv = new StreamingViewer();
+								sessionStatus = WATCHING;
+								sv.start();
+								showStreaming();
 							}
-						
 						}
 					} catch (IOException e) {
 						try {
@@ -119,6 +124,7 @@ public class Client extends Application{
 						e.printStackTrace();
 					}
 				}
+
 			});
 					
 			tServer.start();
@@ -129,6 +135,20 @@ public class Client extends Application{
 					e.printStackTrace();
 				}
 }
+	
+	private void showStreaming() {
+		try {
+			Thread.sleep(1000);
+		while(true) {
+			String infoGame = sv.gameState;
+//			System.out.println(infoGame);
+			updateGame(infoGame);
+				Thread.sleep(36);
+		}
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
 	
 	public void connectToGame() {
 		final Socket client;
@@ -238,6 +258,7 @@ public class Client extends Application{
 			player = enemies[posPlayer];
 		else {
 			String[]oldP = player.split(",");
+			if(oldP[5].equals("T")) {
 			String[]newP = enemies[posPlayer].split(",");
 			StringBuilder sbP = new StringBuilder(oldP[0] +"," + oldP[1]);
 			for (int i = 2; i < newP.length; i++) {
@@ -245,6 +266,7 @@ public class Client extends Application{
 				sbP.append(newP[i]);
 			}
 			player = sbP.toString();
+			}
 		}
 	}
 	
