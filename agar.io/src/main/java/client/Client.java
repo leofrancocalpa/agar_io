@@ -118,6 +118,7 @@ public class Client extends Application {
 								connectToGame();
 								sessionStatus = READY;
 							} else if (serverAnswer.endsWith(ServerMessage.JOIN_SPECTATOR.getMessage())) {
+								nickName = serverAnswer.split(" ")[1];
 								player = 0 + "," + 0 + "," + 10 + "," + 10 + "," + "Spectator" + "," + "F" + "," + 0
 										+ "," + 0 + "," + 0;
 								posPlayer = -1;
@@ -151,6 +152,8 @@ public class Client extends Application {
 
 	private void showStreaming() {
 		try {
+			ReceptionAudio ra = new ReceptionAudio();
+			ra.start();
 			connectToChat();
 			Thread.sleep(1000);
 			while (true) {
@@ -180,8 +183,6 @@ public class Client extends Application {
 					try {
 						readerC = new BufferedReader(new InputStreamReader(client.getInputStream()));
 						System.out.println("Se conecta al juego");
-						ReceptionAudio ra = new ReceptionAudio();
-						ra.start();
 
 						while (client.isConnected()) {
 							final String infoGame = readerC.readLine();
@@ -193,6 +194,8 @@ public class Client extends Application {
 								posPlayer = Integer.parseInt(infoGame.substring(infoGame.length() - 1));
 								sessionStatus = PLAYING;
 								connectToChat();
+								ReceptionAudio ra = new ReceptionAudio();
+								ra.start();
 							}
 //					aquí debería llenar la información del cliente sobre el juego
 						}

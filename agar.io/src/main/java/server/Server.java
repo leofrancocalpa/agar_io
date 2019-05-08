@@ -76,7 +76,7 @@ public class Server extends Application {
 			ServerSocket server = ssf.createServerSocket(Port.GAME.getPort());
 			gameSocket = server;
 			startChatConnection();
-			while (playerC.clientsCount() < 1) {
+			while (playerC.clientsCount() < 2) {
 				Socket c = server.accept();
 				playerC.addSocket(c);
 			}

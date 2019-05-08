@@ -38,6 +38,7 @@ public class ReceptionAudio extends Thread{
 		try {
 			MulticastSocket socket = new MulticastSocket(Port.MUSIC.getPort());
 			InetAddress group = InetAddress.getByName("229.0.0.0");
+			System.out.println("se conecta al grupo de musica");
 			socket.joinGroup(group);
 			
 			while (true) {

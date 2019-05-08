@@ -14,7 +14,6 @@ public class TransmitionAudio extends Thread{
 	
 	@Override
 	public void run() {
-		// TODO Auto-generated method stub
 		super.run();
 		broadcastAudio();
 
@@ -29,7 +28,7 @@ public class TransmitionAudio extends Thread{
 			File soundFile = new File("src/main/resources/server/audio.wav");
 			FileInputStream in = new FileInputStream(soundFile);
 			
-			MulticastSocket socket = new MulticastSocket();
+			MulticastSocket socket = new MulticastSocket(Port.MUSIC.getPort());
 			InetAddress group = InetAddress.getByName("229.0.0.0");
 			int count;
 			byte buffer[] = new byte[60000];
