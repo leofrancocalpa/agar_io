@@ -64,7 +64,7 @@ public class PlayerConnection extends Thread {
 
 	public int clientsCount() {
 		return clients.size();
-//		writerC.
+//		writerGame.
 	}
 
 	public void addSocket(Socket c) {

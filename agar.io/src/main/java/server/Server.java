@@ -29,22 +29,23 @@ public class Server extends Application {
 	public static final String KEYSTORE_PASSWORD = "123456";
 
 	private static ServerStController serverSt;
-	private static HashMap<Integer, SSLConnection> threads = new HashMap<Integer, SSLConnection>();
-//	private static ThreadGroup threadsGroup = new ThreadGroup("threadsGroup");
+	private static HashMap<Integer, SSLConnection> sslConnections = new HashMap<Integer, SSLConnection>();
+	private static HashMap<Integer, ChatService> chatConnections = new HashMap<Integer, ChatService>();
+	// private static ThreadGroup threadsGroup = new ThreadGroup("threadsGroup");
 	private static HashMap<String, User> users = new HashMap<String, User>();
 	private static Match match = new Match();
 	private SSLServerSocket logSocket;
 	private ServerSocket gameSocket;
-	private InetAddress ip;
-	
+	private ServerSocket chatSocket;
+
 	public void startSSL() {
-		
+
 		System.setProperty("javax.net.ssl.trustStore", "src/main/resources/server/serverTrustedCerts.jks");
 		System.setProperty("javax.net.ssl.trustStorePassword", "123456");
 		System.setProperty("javax.net.ssl.keyStore", "src/main/resources/server/serverkey.jks");
 		System.setProperty("javax.net.ssl.keyStorePassword", "123456");
 		final SSLServerSocketFactory ssf = (SSLServerSocketFactory) SSLServerSocketFactory.getDefault();
-		
+
 		Thread condenser = new Thread(new Runnable() {
 
 			public void run() {
@@ -52,18 +53,11 @@ public class Server extends Application {
 					SSLServerSocket server = (SSLServerSocket) ssf.createServerSocket(Port.LOGIN.getPort());
 					logSocket = server;
 					while (true) {
-//						for (Integer tId : threads.keySet()) {
-//							if(!threads.get(tId).isAlive())
-//								threads.remove(tId);
-//						}
 						SSLSocket c = (SSLSocket) server.accept();
 						SSLConnection clientListener = new SSLConnection(c);
 						int address = c.hashCode();
-						threads.put(address, clientListener);
-//						Thread th = new Thread(threadsGroup, clientListener);
-//						th.start();
+						sslConnections.put(address, clientListener);
 						clientListener.start();
-//						System.out.println(threads.size());
 					}
 				} catch (IOException e) {
 					System.out.println("Se cierra el login para Clientes");
@@ -78,31 +72,56 @@ public class Server extends Application {
 		ServerSocketFactory ssf = ServerSocketFactory.getDefault();
 		PlayerConnection playerC = new PlayerConnection();
 		StreamingService stream = new StreamingService();
-			try {
-				ServerSocket server = ssf.createServerSocket(Port.GAME.getPort());
-				gameSocket = server;
-				while (playerC.clientsCount() < 1) {
+		try {
+			ServerSocket server = ssf.createServerSocket(Port.GAME.getPort());
+			gameSocket = server;
+			startChatConnection();
+			while (playerC.clientsCount() < 1) {
 				Socket c = server.accept();
 				playerC.addSocket(c);
-				}
-			} catch (IOException e) {
-				System.out.println("Tiempo agotado");
+			}
+		} catch (IOException e) {
+			System.out.println("Tiempo agotado");
 //				e.printStackTrace();
-			}
-			if(playerC.clientsCount()>=1) {
-				TransmitionAudio ta = new TransmitionAudio();
-				ta.start();
-				playerC.start();
-				stream.start();
-			}
+		}
+		if (playerC.clientsCount() >= 1) {
+			TransmitionAudio ta = new TransmitionAudio();
+			ta.start();
+			playerC.start();
+			stream.start();
+		}
+
+		else
+			JOptionPane.showMessageDialog(new JFrame(), "Cantidad de jugadores insuficiente");
+	}
+
+	private void startChatConnection() {
+		Thread chatWaiter = new Thread(new Runnable() {
 			
-			else
-				JOptionPane.showMessageDialog(new JFrame(), "Cantidad de jugadores insuficiente");
+			@Override
+			public void run() {
+				try {
+					ServerSocketFactory ssf = ServerSocketFactory.getDefault();
+					ServerSocket server = ssf.createServerSocket(Port.CHAT.getPort());
+					chatSocket = server;
+					while (true) {
+						Socket c = server.accept();
+						ChatService cs = new ChatService(c);
+						chatConnections.put(c.hashCode(), cs);
+						cs.start();
+					}
+				} catch (IOException e) {
+					System.out.println("Se cierra el chat para clientes");
+				}
+				
+			}
+		});
+		chatWaiter.start();
 	}
 
 	public static void registerNewUser(int hashC, String[] info) {
 		String response = signIn(info[0], info[1], info[2]);
-		threads.get(hashC).writeSessionStatus(response);
+		sslConnections.get(hashC).writeSessionStatus(response);
 	}
 
 	private static String signIn(String email, String nickname, String password) {
@@ -120,11 +139,15 @@ public class Server extends Application {
 			}
 		}
 		if (toPlay == null || !toPlay.isInGame())
-			threads.get(hashC).writeSessionStatus(ServerMessage.SESSION_FAILED.getMessage());
+			sslConnections.get(hashC).writeSessionStatus(ServerMessage.SESSION_FAILED.getMessage());
 		else {
-			if(!match.isInGame())
-			threads.get(hashC).writeSessionStatus("Hello "+ toPlay.getNickname() +" " +ServerMessage.WAITING_MATCH.getMessage());
-			else threads.get(hashC).writeSessionStatus("Hello "+ toPlay.getNickname() +" " +ServerMessage.JOIN_SPECTATOR.getMessage());
+			if (!match.isInGame())
+				sslConnections.get(hashC).writeSessionStatus(
+						"Hello " + toPlay.getNickname() + " " + ServerMessage.WAITING_MATCH.getMessage());
+			else {
+				sslConnections.get(hashC).writeSessionStatus(
+						"Hello " + toPlay.getNickname() + " " + ServerMessage.JOIN_SPECTATOR.getMessage());
+			}
 		}
 	}
 
@@ -150,7 +173,7 @@ public class Server extends Application {
 	public static void setGamePositions(String[] playersInfo) {
 		match.updateGame(playersInfo);
 	}
-	
+
 	@Override
 	public void start(final Stage primaryStage) {
 		try {
@@ -183,22 +206,29 @@ public class Server extends Application {
 		try {
 			gameSocket.close();
 			logSocket.close();
+			chatSocket.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
 	public boolean isReceiving() {
-		if(logSocket.isClosed())
-		return false;
+		if (logSocket.isClosed())
+			return false;
 		return true;
 	}
 
 	public boolean isReady() {
-		return logSocket!=null && !logSocket.isClosed();
+		return logSocket != null && isReceiving();
 	}
 
 	public boolean isInGame() {
 		return match.isInGame();
+	}
+
+	public static void sendToChat(String clientText) {
+		for (ChatService chat : chatConnections.values()) {
+			chat.sendToClient(clientText);			
+		}
 	}
 }

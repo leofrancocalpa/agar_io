@@ -5,7 +5,8 @@ public enum Port {
 	LOGIN(8030),
 	GAME(8040),
 	MUSIC(8050),
-	STREAM(8060);
+	STREAM(8060),
+	CHAT(8070);
 	
 	private int port;
 	

@@ -14,6 +14,8 @@ import javax.sound.sampled.Clip;
 import javax.sound.sampled.DataLine;
 import javax.sound.sampled.SourceDataLine;
 
+import settings.Port;
+
 public class ReceptionAudio extends Thread{
 	
 	static AudioInputStream audioInputStream;
@@ -34,7 +36,7 @@ public class ReceptionAudio extends Thread{
 	*/
 	private static void initiateAudio() {
 		try {
-			MulticastSocket socket = new MulticastSocket(9786);
+			MulticastSocket socket = new MulticastSocket(Port.MUSIC.getPort());
 			InetAddress group = InetAddress.getByName("229.0.0.0");
 			socket.joinGroup(group);
 			
@@ -78,10 +80,10 @@ public class ReceptionAudio extends Thread{
     private synchronized static void play(AudioInputStream ais) throws Exception {
     	
         try (Clip clip = AudioSystem.getClip()) {
-        	System.out.println("Playing audio: "+clip);
+//        	System.out.println("Playing audio: "+clip);
             clip.open(ais);
             clip.start();
-            Thread.sleep(100); // given clip.drain a chance to start
+            Thread.sleep(500); // given clip.drain a chance to start
             clip.drain();
         }
         catch(Exception e) {

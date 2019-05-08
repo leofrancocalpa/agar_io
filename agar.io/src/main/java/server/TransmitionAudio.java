@@ -7,6 +7,8 @@ import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
 
+import settings.Port;
+
 
 public class TransmitionAudio extends Thread{
 	
@@ -33,8 +35,8 @@ public class TransmitionAudio extends Thread{
 			byte buffer[] = new byte[60000];
 			
 			while ((count = in.read(buffer, 0, buffer.length))!=-1) {
-					System.out.println("Trasnmitiendo audio: "+buffer);
-					DatagramPacket packet = new DatagramPacket(buffer, buffer.length, group, 9786);
+//					System.out.println("Trasnmitiendo audio: "+buffer);
+					DatagramPacket packet = new DatagramPacket(buffer, buffer.length, group, Port.MUSIC.getPort());
 					socket.send(packet);
 					Thread.sleep(500);
 			}

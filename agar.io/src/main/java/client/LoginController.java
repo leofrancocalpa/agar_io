@@ -2,12 +2,12 @@ package client;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-
 import gui.UserCanvas;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
@@ -29,7 +29,9 @@ public class LoginController {
 
 	@FXML
 	private Button btn_singin;
-
+	
+	  @FXML
+	    private Button btnConnect;
 	private Client client;
 
 	private Stage stage;
@@ -83,7 +85,6 @@ public class LoginController {
 			stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
 
 				public void handle(WindowEvent event) {
-					// TODO Auto-generated method stub
 					stage.close();
 				}
 			});
@@ -100,20 +101,19 @@ public class LoginController {
 		canvas.start();
 		Scene scene = new Scene(canvas);
 		stage.setScene(scene);
-		stage.setFullScreen(true);
 		stage.show();
 	}
-
-	void closeSigninWindow() {
-		stage.hide();
-	}
+	
+	@FXML
+    void connect(ActionEvent event) {
+		client.connectToServer();
+    }
 
 	public void showMessage(String line) {
 
 		if (line.equals(ServerMessage.REGISTER_SUCCESS.getMessage())) {
 			JOptionPane.showMessageDialog(new JFrame(), ServerMessage.REGISTER_SUCCESS.getMessage(),
 					"Register complete", JOptionPane.INFORMATION_MESSAGE);
-//		closeSigninWindow();
 		} else if (line.equals(ServerMessage.SESSION_FAILED.getMessage())) {
 			JOptionPane.showMessageDialog(new JFrame(), ServerMessage.SESSION_FAILED.getMessage(), "Session failed",
 					JOptionPane.ERROR_MESSAGE);
