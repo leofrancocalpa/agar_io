@@ -67,6 +67,9 @@ public class Client extends Application {
 			sessionStatus = OFFLINE;
 			posPlayer = 0;
 			chat = new ArrayList<>();
+			enemies = new String[0];
+			food = new String[0];
+			scores = new String[0];
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -153,6 +156,7 @@ public class Client extends Application {
 			while (true) {
 				String infoGame = sv.gameState;
 //			System.out.println(infoGame);
+				if(infoGame!=null)
 				updateGame(infoGame);
 				Thread.sleep(36);
 			}
@@ -164,7 +168,6 @@ public class Client extends Application {
 	public void connectToGame() {
 		final Socket client;
 		SocketFactory sf = SocketFactory.getDefault();
-		connectToChat();
 		try {
 			client = sf.createSocket(HOST, Port.GAME.getPort());
 			writerGame = new PrintWriter(client.getOutputStream(), true);
@@ -189,6 +192,7 @@ public class Client extends Application {
 							} else {
 								posPlayer = Integer.parseInt(infoGame.substring(infoGame.length() - 1));
 								sessionStatus = PLAYING;
+								connectToChat();
 							}
 //					aquí debería llenar la información del cliente sobre el juego
 						}
@@ -227,7 +231,10 @@ public class Client extends Application {
 		try {
 			client = sf.createSocket(HOST, Port.CHAT.getPort());
 			writerChat = new PrintWriter(client.getOutputStream(), true);
-			writerChat.println(nickName + "is watching");
+			if(sessionStatus == WATCHING)
+			writerChat.println(nickName + " is watching");
+			else if (sessionStatus == PLAYING)
+				writerChat.println(nickName + " is playing");
 			readerChat = new BufferedReader(new InputStreamReader(client.getInputStream()));
 		} catch (IOException e1) {
 			e1.printStackTrace();
