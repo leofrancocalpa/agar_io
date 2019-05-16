@@ -4,9 +4,9 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class ServerDB extends Thread{
+public class WebServer extends Thread{
 	
-	public ServerDB() {
+	public WebServer() {
 		run();
 	}
 	
@@ -33,7 +33,7 @@ public class ServerDB extends Thread{
 	
 	
 	public static void main(String[] args) {
-		ServerDB server = new ServerDB();
+		WebServer server = new WebServer();
 	}
 
 }

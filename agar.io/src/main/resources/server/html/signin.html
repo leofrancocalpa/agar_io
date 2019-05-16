@@ -1,164 +1,99 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
 <head>
-<meta charset="utf-8">
-<title>Form Login </title>
-<style type="text/css">
-
+<style>
 body {
 	
-margin: 0;
-  padding: 0;
-  background-size: cover;
-  font-family: sans-serif;
-  height: 100vh;
-}
-
-
-.login-box{
-	  width: 320px;
-  height: 420px;
-  background: #010;
-  color: #fff;
-  top: 50%;
-  left: 50%;
-  position: absolute;
-  transform: translate(-50%, -50%);
-  box-sizing: border-box;
-  padding: 70px 30px;
-}
-
-.login-box .avatar{
-
- width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  position: absolute;
-  top: -50px;
-  left: calc(50% - 50px);
+	margin: 0;
+	  padding: 0;
+	  background: url("http://tipdiario.com/wp-content/uploads/juegos-que-forman-tendencias.jpg")no-repeat center top;
+	  background-size: cover;
+	  font-family: sans-serif;
+	  height: 100vh;
+	}
 	
-}
-
-.login-box h1 {
-  margin: 0;
-  padding: 0 0 20px;
-  text-align: center;
-  font-size: 22px;
-}
-
-.login-box label {
-  margin: 0;
-  padding: 0;
-  font-weight: bold;
-  display: block;
-}
-
-.login-box input {
-  width: 100%;
-  margin-bottom: 20px;
-}
-
-.login-box input[type="text"], .login-box input[type="password"] {
-  border: none;
-  border-bottom: 1px solid #fff;
-  background: transparent;
-  outline: none;
-  height: 40px;
-  color: #fff;
-  font-size: 16px;
-}
-
-.login-box input[type="submit"] {
-  border: none;
-  outline: none;
-  height: 40px;
-  background: #0f1ab8;
-  color: #fff;
-  font-size: 18px;
-  border-radius: 20px;
-}
-
-
+	
+	.login-box{
+		  width: 320px;
+	  height: 420px;
+	  background: rgba(0, 17, 0, 0.856);
+	  color: #fff;
+	  top: 50%;
+	  left: 50%;
+	  position: absolute;
+	  transform: translate(-50%, -50%);
+	  box-sizing: border-box;
+	  padding: 70px 30px;
+	}
+	
+	.login-box .avatar{
+	
+	 width: 100px;
+	  height: 100px;
+	  border-radius: 50%;
+	  position: absolute;
+	  top: -50px;
+	  left: calc(50% - 50px);
+		
+	}
+	
+	.login-box h1 {
+	  margin: 0;
+	  padding: 0 0 20px;
+	  text-align: center;
+	  font-size: 22px;
+	}
+	
+	.login-box label {
+	  margin: 0;
+	  padding: 0;
+	  font-weight: bold;
+	  display: block;
+	}
+	
+	.login-box input {
+	  width: 100%;
+	  margin-bottom: 20px;
+	}
+	
+	.login-box input[type="text"], .login-box input[type="password"] {
+	  border: none;
+	  border-bottom: 1px solid #fff;
+	  background: transparent;
+	  outline: none;
+	  height: 40px;
+	  color: #fff;
+	  font-size: 16px;
+	}
+	
+	.login-box input[type="submit"] {
+	  border: none;
+	  outline: none;
+	  height: 40px;
+	  background: #b8370f;
+	  color: #fff;
+	  font-size: 18px;
+	  border-radius: 20px;
+	}
 </style>
-<script language="JavaScript" type="text/javascript">
-	
-	function login(){
-	validarTexto();
-	
-	}
-
-	function validarTexto(){
-	var text= document.getElementsByClassName("input")[0].value;
-	return text;
-	alert(text)
-	}
-
-	function verificarUsuario(){
-	var arrayData= new Array();
-	var archivoTxt= new XMLHttpRequest();
-	var fileRuta= 'basededatos.txt';
-	archivoTxt.open("GET",fileRuta,false);
-	archivoTxt.send(null);
-	var txt = archivoTxt.responseText;
-	var cedula = validarTexto();
-	var count=0;
-	var x= false;
-	var p ="";
-	
-	
-		for (var i=0;  txt[i]!="-" &&!x ; i++){
-
-			
-
-			for(var j=i*7; j<(i*7)+7;j++){
-				p=p.concat(txt[j]);
-			}
-
-			
-			
-			if(p==cedula){
-				x=true;
-			}
-		
-			p="";
-			
-		}
-	if(x){
-		alert(x);
-		seRegistro(cedula);
-	}
-	
-	}
-
-	function seRegistro(var cedula){
-	
-	var mostrar= new XMLHttpRequest();
-	mostrar.open("GET",cedula,false);
-	mostrar.send(null);
-	
-	}
-
-</script>
-
-
+	<title> Login Form </title>
 </head>
-
 <body>
-<div class="login-box">
-
-	<h1>login here</h1>
-	<form action="http://localhost" method='POST' enctype="text/plain">
-		<label for="Cedula">Username</label>
-        <input name="id" type="text" placeholder="Ingrese Username" class="input">
-        
-		<label for="Cedula">Password</label>
-        <input name="id" type="text" placeholder="type Password" class="input">
-        
-		<input type="submit" value="Log in" class="butLog" onclick="seRegistro();">
-		
-	</form>
-	
+	<div class="login-box">
+	<form method="GET">
+		<h1>login </h1>
+		<label for="labUsername">Username</label>
+		<p>
+		<input type="text" id="cedula" name="username"  placeholder="Cedula">	
+		</p>
+		<label for="Password">Password</label>
+		<p>
+			<input type="password" id="cedula" name="password"  placeholder="Cedula">	
+			</p>	
+		<p>
+			<input type="submit" name="" value="Ingresar">
+		</p>
+</form>
 </div>
-	
 </body>
 </html>

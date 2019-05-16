@@ -6,25 +6,31 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.StringTokenizer;
+import java.util.Map.Entry;
+
 
 public class RequestHandler implements Runnable{
 	
 	private final Socket socket;
+	private static PersistenceHandler persistanceHandler;
 	
 	public RequestHandler(Socket socket) {
+		super();
 		this.socket = socket;
+//		persistanceHandler= PersistenceHandler.getPersistanceHandler();
 	}
 
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
 		System.out.println("RequestHandler Started for " + this.socket);
+		persistanceHandler= PersistenceHandler.getPersistanceHandler();
 		handleRequest(socket);
-		
-		
 	}
 	
 	/*
@@ -35,6 +41,7 @@ public class RequestHandler implements Runnable{
 		try {
 			BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			String headerLine = in.readLine();
+			System.out.println(headerLine);
 			// A tokenizer is a process that splits text into a series of tokens
 			StringTokenizer tokenizer =  new StringTokenizer(headerLine);
 			//The nextToken method will return the next available token
@@ -46,37 +53,35 @@ public class RequestHandler implements Runnable{
 				System.out.println("Get method processed");
 				String httpQueryString = tokenizer.nextToken();
 				StringBuilder responseBuffer=new StringBuilder();
-				System.out.println(httpQueryString);
 				if(httpQueryString.equals("/")) {
 					
 					 responseBuffer =  loadPage("signin.html");
 					 sendResponse(socket, 200, responseBuffer.toString());
 				}
 				
-				else if(httpQueryString.equals("/puntajes")) {
+				else if(httpQueryString.contains("/?username")) {
 					
-					responseBuffer =  loadPage("puntajes.html");
-					sendResponse(socket, 200, responseBuffer.toString());
+					String query = httpQueryString;
+					query = query.replace("/", "");
+					query= query.replace("?", "");
+					String[] data = query.split("&");
+					data[0]=data[0].substring(9);
+					data[1]=data[1].substring(9);
+					System.out.println(data[0]+ " "+data[1]+" data");
+					if(persistanceHandler.conatainsUser(data[0], data[1])) {
+						responseBuffer =  loadPage("puntajes.html");
+
+						responseBuffer.append(createTable().toString());
+						sendResponse(socket, 200, responseBuffer.toString());
+					}
+					else {
+						responseBuffer =  loadPage("signin.html");
+						
+						sendResponse(socket, 200, responseBuffer.toString());
+					}
 				}
 				
 
-			}
-			
-			else if(httpMethod.equals("POST"))
-			{
-				while(!headerLine.equals("")) {
-					headerLine= in.readLine();
-				}
-				
-				headerLine=in.readLine();
-				String[] data= headerLine.split("=");
-				String cedula= data[1];
-				StringBuilder responseBuffer=new StringBuilder();
-				responseBuffer= loadPage(cedula);
-				sendResponse(socket, 200, responseBuffer.toString());
-				
-				
-			
 			}
 			else
 			{
@@ -86,8 +91,41 @@ public class RequestHandler implements Runnable{
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
+			System.out.println(e.getMessage());
 			e.printStackTrace();
 		}		
+	}
+	
+	public StringBuilder createTable() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("<table><thead><tr class=\"table100-head\"><th class=\"column1\">Date</th><th class=\"column2\">User</th><th class=\"column3\">Score</th><th class=\"column4\">Winner</th></tr></thead><tbody>");
+		
+		StringBuilder sb2 = new StringBuilder();
+		sb2.append("	<div class=\"limiter\"><div class=\"container-table100\"><SELECT NAME=\"selCombo\" id=\"selectHome\" SIZE=1 onChange=\"javascript:alert(selectedIndex);\">");
+		
+		HashMap<String, String> matchs = persistanceHandler.getMatchs();
+		Iterator<Entry<String, String>> iterator = matchs.entrySet().iterator();
+		while(iterator.hasNext()) {
+			Map.Entry<String, String> map = (Entry<String, String>) iterator.next();
+			sb2.append("<OPTION id=\"optioHome\" VALUE=\"link pagina 1\">"+map.getKey()+"</OPTION>");
+			String[] values = map.getValue().split("-");
+			
+			for(int i=0; i<values.length; i++) {
+				sb.append("<tr>");
+				String[] data = values[i].split("/");
+				sb.append("<td class=\"column1\">"+map.getKey()+"</td>");
+				sb.append("<td class=\"column1\">"+data[0]+"</td>");
+				sb.append("<td class=\"column1\">"+data[1]+"</td>");
+				sb.append("<td class=\"column1\">"+data[2]+"</td>");
+				sb.append("</tr>");
+			}
+			
+						
+		}
+		sb2.append(" </SELECT></div>");
+		sb.append("</tbody></table></div></div></body>");
+		sb2.append(sb.toString());
+		return sb2;
 	}
 	
 	/*
@@ -125,6 +163,7 @@ public class RequestHandler implements Runnable{
 				out.writeBytes(statusLine);
 				out.writeBytes("\r\n");
 			}
+			out.flush();
 			out.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -145,7 +184,7 @@ public class RequestHandler implements Runnable{
 			while (br.ready()) {
 				salida.append(br.readLine());
 			}
-				
+			br.close();	
 
 		}catch (Exception e) {
 			System.out.println("Error al cargar html signin: "+e.getMessage());
