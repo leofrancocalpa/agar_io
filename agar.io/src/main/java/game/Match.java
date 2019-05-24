@@ -1,7 +1,10 @@
 package game;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -26,6 +29,7 @@ public class Match
 	private int game_field_size_y;
 	private boolean timeOut;
 	private boolean inGame;
+	private String date;
 	
 	public Match() {
 		//food = new ArrayList<Ball>();
@@ -35,10 +39,15 @@ public class Match
 		this.game_field_size_x=1920;
 		this.game_field_size_y=1080;
 		timeOut = false;
-		setInGame(false);
+		setInGame(false);	
 	}
 	
 	public void initialize(ArrayList<String> playersFromServer) {
+		
+		Date currentDate = new Date();
+		DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		date=format.format(currentDate);
+		
 		for(int i=0; i<FOOD_NUM_MAX; i++) {
 			Ball newFood = new Ball(i+"");
 			newFood.setVelocity(0, 0);
@@ -203,6 +212,10 @@ public class Match
 
 	public void setInGame(boolean inGame) {
 		this.inGame = inGame;
+	}
+	
+	public String getDate() {
+		return date;
 	}
 		
 }

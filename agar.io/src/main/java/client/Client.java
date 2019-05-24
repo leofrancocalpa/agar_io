@@ -26,7 +26,7 @@ public class Client extends Application {
 	public static final int READY = 1;
 	public static final int PLAYING = 2;
 	public static final int WATCHING = 3;
-	public static final String HOST = "Despair";
+	public static final String HOST = "localhost";
 	
 	public static PrintWriter writerGame;
 	public static PrintWriter writerChat;

@@ -6,6 +6,9 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.net.ServerSocketFactory;
 import javax.net.ssl.SSLServerSocket;
@@ -14,7 +17,9 @@ import javax.net.ssl.SSLSocket;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
+import game.Ball;
 import game.Match;
+import http.PersistenceHandler;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -34,6 +39,7 @@ public class Server extends Application {
 	// private static ThreadGroup threadsGroup = new ThreadGroup("threadsGroup");
 	private static HashMap<String, User> users = new HashMap<String, User>();
 	private static Match match = new Match();
+	private static PersistenceHandler persis = PersistenceHandler.getPersistanceHandler();
 	private SSLServerSocket logSocket;
 	private ServerSocket gameSocket;
 	private ServerSocket chatSocket;
@@ -50,6 +56,7 @@ public class Server extends Application {
 
 			public void run() {
 				try {
+					loadUsersDB();
 					SSLServerSocket server = (SSLServerSocket) ssf.createServerSocket(Port.LOGIN.getPort());
 					logSocket = server;
 					while (true) {
@@ -127,6 +134,7 @@ public class Server extends Application {
 	private static String signIn(String email, String nickname, String password) {
 		User user = new User(email, nickname, password);
 		users.put(email, user);
+		persis.addUser(nickname, password, email);
 		return ServerMessage.REGISTER_SUCCESS.getMessage();
 	}
 
@@ -191,6 +199,17 @@ public class Server extends Application {
 
 	public static void main(String[] args) {
 		launch(args);
+	}
+	
+	public void loadUsersDB() {
+		HashMap<String, String> usersDB = persis.getUsers();
+		Iterator<Entry<String, String>> iterator = usersDB.entrySet().iterator();
+		while(iterator.hasNext()) {
+			Map.Entry<String, String> map = (Entry<String, String>) iterator.next();
+			String[] datos = map.getValue().split("/");
+			User user = new User(datos[1],map.getKey(), datos[0]);
+			users.put(map.getKey(), user);
+		}
 	}
 
 	public static void initializeGame(String[] playersInfo) {
